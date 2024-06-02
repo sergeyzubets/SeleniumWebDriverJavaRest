@@ -13,6 +13,7 @@
         <lombok.version>1.18.32</lombok.version>
         <logback.version>1.5.6</logback.version>
         <slf4j.api.version>2.0.13</slf4j.api.version>
+        <jackson.databind.version>2.15.3</jackson.databind.version>
     </properties>
 
     <dependencies>
@@ -35,6 +36,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.databind.version}</version>
         </dependency>
     </dependencies>
 
