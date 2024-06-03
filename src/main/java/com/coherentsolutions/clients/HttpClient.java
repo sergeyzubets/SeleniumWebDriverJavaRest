@@ -10,7 +10,6 @@ import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 
-import java.io.IOException;
 import java.util.List;
 
 import static com.coherentsolutions.utils.JsonUtil.readUserCredentialsFile;
@@ -18,50 +17,48 @@ import static com.coherentsolutions.utils.JsonUtil.readUserCredentialsFile;
 @Slf4j
 @Getter
 public class HttpClient {
-    private static final String HOST = System.getProperty("host");
-    private static final int PORT = Integer.parseInt(System.getProperty("port"));
-    private static HttpClient instance = null;
-    private final CloseableHttpClient httpClient;
+    private static ThreadLocal<CloseableHttpClient> threadLocal = new ThreadLocal<>();
 
     private HttpClient() {
-        httpClient = configureHttpClient();
     }
 
-    public static HttpClient getHttpClientInstance() {
-        if (instance == null) {
-            synchronized (HttpClient.class) {
-                if (instance == null) {
-                    instance = new HttpClient();
-                }
-            }
+    public static CloseableHttpClient getHttpClientInstance() {
+        if (threadLocal.get() != null) {
+            return threadLocal.get();
         }
-        return instance;
+
+        CloseableHttpClient httpClient = configureHttpClient();
+        threadLocal.set(httpClient);
+        return threadLocal.get();
     }
 
     @Step("Http client instance has been closed.")
-    public void closeHttpClient() {
+    public static void closeHttpClient() {
         try {
-            getHttpClientInstance().getHttpClient().close();
-            log.info("Http client instance has been closed.");
-        } catch (IOException ex) {
-            log.error(ex.getMessage());
-            throw new RuntimeException(ex);
+            if (threadLocal.get() != null) {
+                threadLocal.get().close();
+                log.info("Http client instance has been closed.");
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            threadLocal.remove();
         }
     }
 
     @Step("Http client instance has been created.")
-    private CloseableHttpClient configureHttpClient() {
+    private static CloseableHttpClient configureHttpClient() {
         return HttpClients.custom()
                 .setDefaultCredentialsProvider(configureCredentialsProvider())
                 .build();
     }
 
-    private BasicCredentialsProvider configureCredentialsProvider() {
+    private static BasicCredentialsProvider configureCredentialsProvider() {
         BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         List<User> listOfUsers = readUserCredentialsFile();
 
         listOfUsers.forEach(user -> credentialsProvider.setCredentials(
-                new AuthScope(HOST, PORT),
+                new AuthScope(System.getProperty("host"), Integer.parseInt(System.getProperty("port"))),
                 new UsernamePasswordCredentials(user.getUsername(), user.getPassword().toCharArray())));
         return credentialsProvider;
     }

@@ -27,17 +27,14 @@ public class AuthorizationClient {
     private static final String INVALID_TOKEN = "Bearer token is not valid.";
     private static final String RESPONSE_CODE_FAILURE = "Response code is not valid.";
 
-    private static final String SCHEME = System.getProperty("scheme");
-    private static final String HOST = System.getProperty("host");
-    private static final int PORT = Integer.parseInt(System.getProperty("port"));
     private HttpEntity entity;
     private AccessTokenDTO accessToken;
 
     public String getAccessToken(CloseableHttpClient httpClient, Scope scope) throws URISyntaxException, IOException {
         URI uri = new URIBuilder()
-                .setScheme(SCHEME)
-                .setHost(HOST)
-                .setPort(PORT)
+                .setScheme(System.getProperty("scheme"))
+                .setHost(System.getProperty("host"))
+                .setPort(Integer.parseInt(System.getProperty("port")))
                 .setPath("/oauth/token")
                 .setParameter("grant_type", "client_credentials")
                 .setParameter("scope", scope.getValue())
