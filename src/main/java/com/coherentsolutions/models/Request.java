@@ -26,6 +26,14 @@ public class Request {
         this.requestBody = getRequestBody(httpEntity);
     }
 
+    public Request(String requestName, RequestLine requestLine, Header[] headers, HttpEntity httpEntity, String requestBody) {
+        this.requestName = requestName;
+        this.requestLine = requestLine;
+        this.headers = headers;
+        this.httpEntity = httpEntity;
+        this.requestBody = requestBody;
+    }
+
     private String getRequestBody(HttpEntity httpEntity) {
         String result = null;
 

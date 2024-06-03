@@ -1,6 +1,6 @@
 package com.coherentsolutions.clients;
 
-import com.coherentsolutions.dto.ZipCodeDTO;
+import com.coherentsolutions.dto.UserDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -24,85 +24,38 @@ import java.util.List;
 
 import static com.coherentsolutions.utils.GeneralUtil.logRequest;
 import static com.coherentsolutions.utils.GeneralUtil.logResponse;
-import static com.coherentsolutions.utils.ZipCodeClientUtil.convertEntityToBody;
+import static com.coherentsolutions.utils.UserClientUtil.convertUserToJsonBody;
 
 @Slf4j
 @Getter
-public class ZipCodeClient extends BaseClient {
+public class UserClient extends BaseClient {
     private CloseableHttpResponse response;
-    private List<ZipCodeDTO> zipCodes;
+    private List<UserDTO> users;
 
-    public CloseableHttpResponse sendGetAvailableZipCodesRequest(CloseableHttpClient httpClient, String readToken) {
+    public CloseableHttpResponse sendPostCreateUserRequest(CloseableHttpClient httpClient, String writeToken, UserDTO userToAdd) {
         URI uri;
         try {
             uri = new URIBuilder()
                     .setScheme(SCHEME)
                     .setHost(HOST)
                     .setPort(PORT)
-                    .setPath("/zip-codes")
+                    .setPath("/users")
                     .build();
         } catch (URISyntaxException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);
         }
 
-        HttpGet httpGet = new HttpGet(uri);
-        httpGet.addHeader("Authorization", readToken);
-        httpGet.addHeader("accept", "*/*");
-        String requestName = "Get available zip codes";
-        logRequest(requestName, httpGet);
-
-        try {
-            response = (CloseableHttpResponse) httpClient.execute(httpGet, response1 -> {
-                int statusCode = response1.getCode();
-                if (statusCode != HttpStatus.SC_OK) {
-                    logIncorrectResponseCode(HttpStatus.SC_OK, statusCode);
-                }
-
-                HttpEntity entity = response1.getEntity();
-                if (entity == null) {
-                    logNullEntity();
-                    logResponse(requestName, response1, null);
-                } else {
-                    String responseBody = EntityUtils.toString(entity, StandardCharsets.UTF_8);
-                    logResponse(requestName, response1, responseBody);
-                    zipCodes = new ObjectMapper().readValue(responseBody, new TypeReference<>() {
-                    });
-                }
-                return response1;
-            });
-        } catch (IOException ex) {
-            log.error(ex.getMessage());
-        } finally {
-            releaseRequestResources(requestName, response, httpGet);
-        }
-        return response;
-    }
-
-    public CloseableHttpResponse sendPostExpandZipCodesRequest(CloseableHttpClient httpClient, String writeToken, List<ZipCodeDTO> zipCodesToAdd) {
-        URI uri;
-        try {
-            uri = new URIBuilder()
-                    .setScheme(SCHEME)
-                    .setHost(HOST)
-                    .setPort(PORT)
-                    .setPath("/zip-codes/expand")
-                    .build();
-        } catch (URISyntaxException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
+        String requestBody = convertUserToJsonBody(userToAdd);
+        HttpEntity stringEntity = new StringEntity(requestBody, ContentType.APPLICATION_JSON);
 
         HttpPost httpPost = new HttpPost(uri);
         httpPost.addHeader("Authorization", writeToken);
         httpPost.addHeader("accept", "*/*");
         httpPost.addHeader("Content-Type", "application/json");
-
-        HttpEntity stringEntity = new StringEntity(zipCodesToAdd.toString(), ContentType.APPLICATION_JSON);
         httpPost.setEntity(stringEntity);
 
-        String requestBody = convertEntityToBody(stringEntity);
-        String requestName = "Expand available zip codes";
+        String requestName = "Create a user request";
         logRequest(requestName, httpPost, requestBody);
 
         try {
@@ -119,8 +72,6 @@ public class ZipCodeClient extends BaseClient {
                 } else {
                     String responseBody = EntityUtils.toString(entity, StandardCharsets.UTF_8);
                     logResponse(requestName, response1, responseBody);
-                    zipCodes = new ObjectMapper().readValue(responseBody, new TypeReference<>() {
-                    });
                 }
                 return response1;
             });
@@ -128,6 +79,54 @@ public class ZipCodeClient extends BaseClient {
             log.error(ex.getMessage());
         } finally {
             releaseRequestResources(requestName, response, httpPost);
+        }
+        return response;
+    }
+
+    public CloseableHttpResponse sendGetUsersRequest(CloseableHttpClient httpClient, String readToken) {
+        URI uri;
+        try {
+            uri = new URIBuilder()
+                    .setScheme(SCHEME)
+                    .setHost(HOST)
+                    .setPort(PORT)
+                    .setPath("/users")
+                    .build();
+        } catch (URISyntaxException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+        HttpGet httpGet = new HttpGet(uri);
+        httpGet.addHeader("Authorization", readToken);
+        httpGet.addHeader("accept", "application/json");
+
+        String requestName = "Get all users";
+        logRequest(requestName, httpGet);
+
+        try {
+            response = (CloseableHttpResponse) httpClient.execute(httpGet, response1 -> {
+                int statusCode = response1.getCode();
+                if (statusCode != HttpStatus.SC_OK) {
+                    logIncorrectResponseCode(HttpStatus.SC_OK, statusCode);
+                }
+
+                HttpEntity entity = response1.getEntity();
+                if (entity == null) {
+                    logNullEntity();
+                    logResponse(requestName, response1, null);
+                } else {
+                    String responseBody = EntityUtils.toString(entity, StandardCharsets.UTF_8);
+                    logResponse(requestName, response1, responseBody);
+                    users = new ObjectMapper().readValue(responseBody, new TypeReference<>() {
+                    });
+                }
+                return response1;
+            });
+        } catch (IOException ex) {
+            log.error(ex.getMessage());
+        } finally {
+            releaseRequestResources(requestName, response, httpGet);
         }
         return response;
     }

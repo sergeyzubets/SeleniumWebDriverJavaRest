@@ -13,22 +13,22 @@ public abstract class BaseClient {
     protected static final String HOST = System.getProperty("host");
     protected static final int PORT = Integer.parseInt(System.getProperty("port"));
 
-    protected static final String RESPONSE_CODE_FAILURE = "Response code is not valid. Expected {}, received {}";
-    protected static final String NULLABLE_ENTITY = "Response contains no content.";
-    protected static final String RELEASE_RESOURCES = "Releasing any system resources associated with '{}' request.";
-
     protected void logIncorrectResponseCode(int expected, int actual) {
-        log.error(RESPONSE_CODE_FAILURE, expected, actual);
+        log.error("Response code is not valid. Expected {}, received {}", expected, actual);
     }
 
     protected void logNullEntity() {
-        log.warn(NULLABLE_ENTITY);
+        log.warn("Response contains no content.");
     }
 
-    protected void releaseRequestResources(String requestName, CloseableHttpResponse response, HttpUriRequestBase request) throws IOException {
-        log.info(RELEASE_RESOURCES, requestName);
-        EntityUtils.consume(response.getEntity());
-        response.close();
-        request.reset();
+    protected void releaseRequestResources(String requestName, CloseableHttpResponse response, HttpUriRequestBase request) {
+        try {
+            log.info("Releasing any system resources associated with '{}' request.", requestName);
+            EntityUtils.consume(response.getEntity());
+            response.close();
+            request.reset();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
     }
 }

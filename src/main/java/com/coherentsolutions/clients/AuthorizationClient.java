@@ -33,18 +33,24 @@ public class AuthorizationClient extends BaseClient{
         return getBearerToken(accessTokenDTO);
     }
 
-    public CloseableHttpResponse sendAccessTokenRequest(CloseableHttpClient httpClient, Scope scope) throws URISyntaxException, IOException {
-        URI uri = new URIBuilder()
-                .setScheme(SCHEME)
-                .setHost(HOST)
-                .setPort(PORT)
-                .setPath("/oauth/token")
-                .setParameter("grant_type", "client_credentials")
-                .setParameter("scope", scope.getValue())
-                .build();
+    public CloseableHttpResponse sendAccessTokenRequest(CloseableHttpClient httpClient, Scope scope) {
+        URI uri;
+        try {
+            uri = new URIBuilder()
+                    .setScheme(SCHEME)
+                    .setHost(HOST)
+                    .setPort(PORT)
+                    .setPath("/oauth/token")
+                    .setParameter("grant_type", "client_credentials")
+                    .setParameter("scope", scope.getValue())
+                    .build();
+        } catch (URISyntaxException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
 
         HttpPost httpPost = new HttpPost(uri);
-        String requestName = "Get bearer token";
+        String requestName = "Get bearer " + scope.getValue() + " token";
         logRequest(requestName, httpPost);
 
         try {

@@ -18,6 +18,8 @@ public class BaseTest {
     protected String writeToken;
     protected CloseableHttpClient httpClient;
 
+    protected static final String RESPONSE_CODE_FAILURE = "Response code is not valid.";
+
     @BeforeEach
     @Step("Get http client instance and access tokens.")
     protected void environmentSetup() throws URISyntaxException, IOException {
