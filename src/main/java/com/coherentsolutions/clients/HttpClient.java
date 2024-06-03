@@ -16,7 +16,7 @@ import static com.coherentsolutions.utils.JsonUtil.readUserCredentialsFile;
 
 @Slf4j
 @Getter
-public class HttpClient {
+public class HttpClient extends BaseClient {
     private static ThreadLocal<CloseableHttpClient> threadLocal = new ThreadLocal<>();
 
     private HttpClient() {
@@ -58,7 +58,7 @@ public class HttpClient {
         List<User> listOfUsers = readUserCredentialsFile();
 
         listOfUsers.forEach(user -> credentialsProvider.setCredentials(
-                new AuthScope(System.getProperty("host"), Integer.parseInt(System.getProperty("port"))),
+                new AuthScope(HOST, PORT),
                 new UsernamePasswordCredentials(user.getUsername(), user.getPassword().toCharArray())));
         return credentialsProvider;
     }

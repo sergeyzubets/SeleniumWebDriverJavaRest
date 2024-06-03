@@ -3,9 +3,11 @@ package com.coherentsolutions.clients;
 import com.coherentsolutions.dto.AccessTokenDTO;
 import com.coherentsolutions.utils.Scope;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpStatus;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
@@ -20,58 +22,54 @@ import java.util.Objects;
 import static com.coherentsolutions.utils.GeneralUtil.*;
 
 @Slf4j
-public class AuthorizationClient {
-    private static final String NULLABLE_ENTITY = "Response contains no content.";
-    private static final String RELEASE_RESOURCES = "Releasing any system resources associated with ";
-    private static final String REQUEST_NAME = "Get bearer token";
-    private static final String INVALID_TOKEN = "Bearer token is not valid.";
-    private static final String RESPONSE_CODE_FAILURE = "Response code is not valid.";
-
-    private HttpEntity entity;
-    private AccessTokenDTO accessToken;
+@Getter
+public class AuthorizationClient extends BaseClient{
+    private CloseableHttpResponse response;
+    private AccessTokenDTO accessTokenDTO;
 
     public String getAccessToken(CloseableHttpClient httpClient, Scope scope) throws URISyntaxException, IOException {
+        sendAccessTokenRequest(httpClient, scope);
+        logTokenDetails(accessTokenDTO, scope.getValue());
+        return getBearerToken(accessTokenDTO);
+    }
+
+    public CloseableHttpResponse sendAccessTokenRequest(CloseableHttpClient httpClient, Scope scope) throws URISyntaxException, IOException {
         URI uri = new URIBuilder()
-                .setScheme(System.getProperty("scheme"))
-                .setHost(System.getProperty("host"))
-                .setPort(Integer.parseInt(System.getProperty("port")))
+                .setScheme(SCHEME)
+                .setHost(HOST)
+                .setPort(PORT)
                 .setPath("/oauth/token")
                 .setParameter("grant_type", "client_credentials")
                 .setParameter("scope", scope.getValue())
                 .build();
 
         HttpPost httpPost = new HttpPost(uri);
-        logRequest(REQUEST_NAME, httpPost);
+        String requestName = "Get bearer token";
+        logRequest(requestName, httpPost);
 
         try {
-            httpClient.execute(httpPost, response -> {
-                int statusCode = response.getCode();
-
+            response = (CloseableHttpResponse) httpClient.execute(httpPost, response1 -> {
+                int statusCode = response1.getCode();
                 if (statusCode != HttpStatus.SC_OK) {
-                    log.error(RESPONSE_CODE_FAILURE);
+                    logIncorrectResponseCode(HttpStatus.SC_OK, statusCode);
                 }
 
-                entity = response.getEntity();
-
+                HttpEntity entity = response1.getEntity();
                 if (entity == null) {
-                    log.warn(NULLABLE_ENTITY);
+                    logNullEntity();
                 } else {
                     String responseBody = EntityUtils.toString(entity, StandardCharsets.UTF_8);
-                    accessToken = new ObjectMapper().readValue(responseBody, AccessTokenDTO.class);
-                    logResponse(REQUEST_NAME, response, responseBody);
-                    logTokenDetails(accessToken, scope.getValue());
+                    logResponse(requestName, response1, responseBody);
+                    accessTokenDTO = new ObjectMapper().readValue(responseBody, AccessTokenDTO.class);
                 }
-                return response;
+                return response1;
             });
-
         } catch (IOException ex) {
             log.error(ex.getMessage());
         } finally {
-            log.info(RELEASE_RESOURCES + "'" + REQUEST_NAME + "' request");
-            EntityUtils.consume(entity);
-            httpPost.reset();
+            releaseRequestResources(requestName, response, httpPost);
         }
-        return getBearerToken(accessToken);
+        return response;
     }
 
     private String getBearerToken(AccessTokenDTO accessToken) {
@@ -79,7 +77,7 @@ public class AuthorizationClient {
         if (Objects.equals(accessToken.getTokenType(), "bearer") && accessToken.getAccessToken() != null) {
             token = accessToken.getTokenType() + " " + accessToken.getAccessToken();
         } else {
-            log.error(INVALID_TOKEN);
+            log.error("Bearer token is not valid.");
         }
         return token;
     }
