@@ -44,6 +44,10 @@ mvn clean test
 ```
 mvn clean test -Dhost="125.0.0.1" -Dport="48000"
 ```
+* To run smoke suit with defaults use the command line:
+```
+mvn clean test -DsuiteFile="SmokeTest"
+```
 * To generate and open the Allure report use the command line:
 ```
 allure serve target/allure-results   

@@ -27,7 +27,7 @@ public class AuthorizationClient extends BaseClient{
     private CloseableHttpResponse response;
     private AccessTokenDTO accessTokenDTO;
 
-    public String getAccessToken(CloseableHttpClient httpClient, Scope scope) throws URISyntaxException, IOException {
+    public String getAccessToken(CloseableHttpClient httpClient, Scope scope) {
         sendAccessTokenRequest(httpClient, scope);
         logTokenDetails(accessTokenDTO, scope.getValue());
         return getBearerToken(accessTokenDTO);
@@ -50,7 +50,7 @@ public class AuthorizationClient extends BaseClient{
         }
 
         HttpPost httpPost = new HttpPost(uri);
-        String requestName = "Get bearer " + scope.getValue() + " token";
+        String requestName = "Get " + scope.getValue() + " token";
         logRequest(requestName, httpPost);
 
         try {

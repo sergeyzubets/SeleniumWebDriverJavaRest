@@ -19,9 +19,11 @@
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <allure-junit5.version>2.27.0</allure-junit5.version>
         <junit-jupiter.version>5.11.0-M2</junit-jupiter.version>
+        <junit-platform-suite-engine.version>1.11.0-M2</junit-platform-suite-engine.version>
         <datafaker.version>1.9.0</datafaker.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <aspectj.version>1.9.22.1</aspectj.version>
+        <suiteFile>RegressionTest</suiteFile>
     </properties>
 
     <dependencies>
@@ -68,6 +70,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-engine</artifactId>
+            <version>${junit-platform-suite-engine.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>net.datafaker</groupId>
             <artifactId>datafaker</artifactId>
             <version>${datafaker.version}</version>
@@ -96,6 +104,7 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <testFailureIgnore>false</testFailureIgnore>
+                    <test>com.coherentsolutions.suites.${suiteFile}</test>
                     <argLine>
                         -Dfile.encoding=${project.build.sourceEncoding}
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
