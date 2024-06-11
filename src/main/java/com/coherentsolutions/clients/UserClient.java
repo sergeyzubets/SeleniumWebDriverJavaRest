@@ -14,11 +14,9 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpStatus;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
-import org.apache.hc.core5.net.URIBuilder;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -33,18 +31,8 @@ public class UserClient extends BaseClient {
     private List<UserDTO> users;
 
     public CloseableHttpResponse sendPostCreateUserRequest(CloseableHttpClient httpClient, String writeToken, UserDTO userToAdd) {
-        URI uri;
-        try {
-            uri = new URIBuilder()
-                    .setScheme(SCHEME)
-                    .setHost(HOST)
-                    .setPort(PORT)
-                    .setPath("/users")
-                    .build();
-        } catch (URISyntaxException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
+        String path = "/users";
+        URI uri = getUri(path);
 
         String requestBody = convertUserToJsonBody(userToAdd);
         HttpEntity stringEntity = new StringEntity(requestBody, ContentType.APPLICATION_JSON);
@@ -84,18 +72,8 @@ public class UserClient extends BaseClient {
     }
 
     public CloseableHttpResponse sendGetUsersRequest(CloseableHttpClient httpClient, String readToken) {
-        URI uri;
-        try {
-            uri = new URIBuilder()
-                    .setScheme(SCHEME)
-                    .setHost(HOST)
-                    .setPort(PORT)
-                    .setPath("/users")
-                    .build();
-        } catch (URISyntaxException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
+        String path = "/users";
+        URI uri =getUri(path);
 
         HttpGet httpGet = new HttpGet(uri);
         httpGet.addHeader("Authorization", readToken);

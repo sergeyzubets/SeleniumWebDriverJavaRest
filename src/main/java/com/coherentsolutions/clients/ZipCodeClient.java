@@ -14,11 +14,9 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpStatus;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
-import org.apache.hc.core5.net.URIBuilder;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -33,18 +31,8 @@ public class ZipCodeClient extends BaseClient {
     private List<ZipCodeDTO> zipCodes;
 
     public CloseableHttpResponse sendGetAvailableZipCodesRequest(CloseableHttpClient httpClient, String readToken) {
-        URI uri;
-        try {
-            uri = new URIBuilder()
-                    .setScheme(SCHEME)
-                    .setHost(HOST)
-                    .setPort(PORT)
-                    .setPath("/zip-codes")
-                    .build();
-        } catch (URISyntaxException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
+        String path = "/zip-codes";
+        URI uri = getUri(path);
 
         HttpGet httpGet = new HttpGet(uri);
         httpGet.addHeader("Authorization", readToken);
@@ -80,18 +68,8 @@ public class ZipCodeClient extends BaseClient {
     }
 
     public CloseableHttpResponse sendPostExpandZipCodesRequest(CloseableHttpClient httpClient, String writeToken, List<ZipCodeDTO> zipCodesToAdd) {
-        URI uri;
-        try {
-            uri = new URIBuilder()
-                    .setScheme(SCHEME)
-                    .setHost(HOST)
-                    .setPort(PORT)
-                    .setPath("/zip-codes/expand")
-                    .build();
-        } catch (URISyntaxException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
+        String path = "/zip-codes/expand";
+        URI uri = getUri(path);
 
         HttpPost httpPost = new HttpPost(uri);
         httpPost.addHeader("Authorization", writeToken);
