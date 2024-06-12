@@ -1,4 +1,4 @@
-package com.coherentsolutions.dto;
+package com.coherentsolutions.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
