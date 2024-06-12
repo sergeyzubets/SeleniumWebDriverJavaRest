@@ -1,4 +1,4 @@
-package com.coherentsolutions.models;
+package com.coherentsolutions.data.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

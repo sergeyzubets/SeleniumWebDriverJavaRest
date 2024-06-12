@@ -1,7 +1,7 @@
 package com.coherentsolutions.clients;
 
-import com.coherentsolutions.models.User;
-import com.coherentsolutions.utils.Scope;
+import com.coherentsolutions.data.models.User;
+import com.coherentsolutions.data.Scope;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.auth.AuthScope;

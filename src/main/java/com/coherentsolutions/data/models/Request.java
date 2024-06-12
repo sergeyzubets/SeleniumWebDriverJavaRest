@@ -1,4 +1,4 @@
-package com.coherentsolutions.models;
+package com.coherentsolutions.data.models;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.Header;

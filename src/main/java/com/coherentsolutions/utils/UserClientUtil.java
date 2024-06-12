@@ -1,8 +1,9 @@
 package com.coherentsolutions.utils;
 
 import com.coherentsolutions.clients.UserClient;
-import com.coherentsolutions.dto.UserDTO;
-import com.coherentsolutions.dto.ZipCodeDTO;
+import com.coherentsolutions.data.Gender;
+import com.coherentsolutions.data.dto.UserDTO;
+import com.coherentsolutions.data.dto.ZipCodeDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;

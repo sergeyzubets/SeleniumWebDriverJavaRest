@@ -3,12 +3,11 @@ package com.coherentsolutions.zipCodeClient;
 import com.coherentsolutions.BaseTest;
 import com.coherentsolutions.clients.UserClient;
 import com.coherentsolutions.clients.ZipCodeClient;
-import com.coherentsolutions.dto.UserDTO;
-import com.coherentsolutions.dto.ZipCodeDTO;
-import com.coherentsolutions.models.Response;
+import com.coherentsolutions.data.dto.UserDTO;
+import com.coherentsolutions.data.dto.ZipCodeDTO;
+import com.coherentsolutions.data.models.Response;
 import io.qameta.allure.*;
 import org.apache.hc.core5.http.HttpStatus;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @Feature("Zip Code Controller")
 public class ZipCodeClientTest extends BaseTest {
 
-    @Disabled
     @Issue("Response code is not valid: 201 instead of 200.")
     @Story("Task 20 - Get available zip codes and add more to the list.")
     @Severity(SeverityLevel.CRITICAL)
@@ -35,12 +33,11 @@ public class ZipCodeClientTest extends BaseTest {
         Response response = new ZipCodeClient().getZipCodes(httpClient);
         List<?> actualZipCodes = response.getParsedBody();
 
-        assertAll("GET All available zip codes test failed.",
+        assertAll("GET all available zip codes test failed.",
                 () -> assertEquals(HttpStatus.SC_OK, response.getCode(), RESPONSE_CODE_FAILURE),
                 () -> assertTrue(actualZipCodes.contains(newZipCode), "List of available zip codes does not contain added code."));
     }
 
-    //@Disabled
     @Story("Task 20 - Get available zip codes and add more to the list.")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("smoke")
@@ -62,7 +59,6 @@ public class ZipCodeClientTest extends BaseTest {
     }
 
 
-    @Disabled
     @Issue("Duplicates for available zip codes can be added to the application.")
     @Story("Task 20 - Get available zip codes and add more to the list.")
     @Severity(SeverityLevel.NORMAL)
@@ -85,7 +81,6 @@ public class ZipCodeClientTest extends BaseTest {
                         "Duplicate for existing code " + zipCode + " was added.")));
     }
 
-    @Disabled
     @Issue("Duplicates for used zip codes can be added to the application.")
     @Story("Task 20 - Get available zip codes and add more to the list.")
     @Severity(SeverityLevel.NORMAL)
@@ -107,7 +102,7 @@ public class ZipCodeClientTest extends BaseTest {
 
         assertAll("Add duplicates for used zip codes test failed.",
                 () -> assertEquals(response.getCode(), HttpStatus.SC_CREATED, RESPONSE_CODE_FAILURE),
-                () -> zipCodesToAdd.forEach(zipCode -> assertEquals(1, getZipCodeRepetitionCount(actualZipCodes, zipCode),
-                        "Duplicate for used code " + zipCode + " was added.")));
+                () -> assertEquals(0, getZipCodeRepetitionCount(actualZipCodes, usedZipCode),
+                        "Duplicate for used code " + usedZipCode + " was added."));
     }
 }

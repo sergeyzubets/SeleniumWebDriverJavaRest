@@ -1,7 +1,7 @@
 package com.coherentsolutions.clients;
 
-import com.coherentsolutions.dto.ZipCodeDTO;
-import com.coherentsolutions.models.Response;
+import com.coherentsolutions.data.dto.ZipCodeDTO;
+import com.coherentsolutions.data.models.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

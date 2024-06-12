@@ -1,7 +1,7 @@
 package com.coherentsolutions.utils;
 
 import com.coherentsolutions.clients.ZipCodeClient;
-import com.coherentsolutions.dto.ZipCodeDTO;
+import com.coherentsolutions.data.dto.ZipCodeDTO;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;

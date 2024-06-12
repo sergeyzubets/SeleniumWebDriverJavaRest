@@ -1,6 +1,6 @@
-package com.coherentsolutions.dto;
+package com.coherentsolutions.data.dto;
 
-import com.coherentsolutions.utils.Gender;
+import com.coherentsolutions.data.Gender;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

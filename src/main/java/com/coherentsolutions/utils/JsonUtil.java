@@ -1,6 +1,6 @@
 package com.coherentsolutions.utils;
 
-import com.coherentsolutions.models.User;
+import com.coherentsolutions.data.models.User;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;

@@ -1,8 +1,8 @@
 package com.coherentsolutions.utils;
 
-import com.coherentsolutions.dto.AccessTokenDTO;
-import com.coherentsolutions.models.Request;
-import com.coherentsolutions.models.Response;
+import com.coherentsolutions.data.dto.AccessTokenDTO;
+import com.coherentsolutions.data.models.Request;
+import com.coherentsolutions.data.models.Response;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;

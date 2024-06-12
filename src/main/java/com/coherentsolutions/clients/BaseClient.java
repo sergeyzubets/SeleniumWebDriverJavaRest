@@ -1,6 +1,6 @@
 package com.coherentsolutions.clients;
 
-import com.coherentsolutions.models.Response;
+import com.coherentsolutions.data.models.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -36,27 +36,8 @@ public abstract class BaseClient {
         }
     }
 
-    protected void logNullEntity() {
-        log.warn("Response contains no content.");
-    }
-
     private void logNullURI() {
         log.error("Uri is null.");
-    }
-
-    private void logNullResponse() {
-        log.error("Response is null.");
-    }
-
-    protected void releaseRequestResources(String requestName, CloseableHttpResponse response, HttpUriRequestBase request) {
-        try {
-            log.info("Releasing any system resources associated with '{}' request.", requestName);
-            EntityUtils.consume(response.getEntity());
-            response.close();
-            request.reset();
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
     }
 
     protected URI getUri(String path) {
@@ -99,36 +80,43 @@ public abstract class BaseClient {
         return uri;
     }
 
-    protected Response sendRequest(CloseableHttpClient httpClient, HttpUriRequestBase request, String requestName, int expectedCode) {
+    protected Response sendRequest(CloseableHttpClient httpClient, HttpUriRequestBase request, String name, int expectedCode) {
         CloseableHttpResponse closeableHttpResponse = null;
         AtomicReference<String> body = new AtomicReference<>();
-        Response response = new Response();
+        Response result = new Response();
 
         try {
-            closeableHttpResponse = (CloseableHttpResponse) httpClient.execute(request, response1 -> {
-                int statusCode = response1.getCode();
-                response.setCode(statusCode);
+            closeableHttpResponse = (CloseableHttpResponse) httpClient.execute(request, response -> {
+                int statusCode = response.getCode();
+                result.setCode(statusCode);
                 codeValidation(expectedCode, statusCode);
 
-                HttpEntity entity = response1.getEntity();
+                HttpEntity entity = response.getEntity();
                 if (entity == null) {
-                    logNullEntity();
+                    log.warn("Response contains no content.");
                 } else {
                     body.set(EntityUtils.toString(entity, StandardCharsets.UTF_8));
-                    logResponse(requestName, response1, body.get());
-                    response.setBody(body.get());
+                    logResponse(name, response, body.get());
+                    result.setBody(body.get());
                 }
-                return response1;
+                return response;
             });
 
             if(closeableHttpResponse == null) {
-                logNullResponse();
+                log.error("Response is null.");
             }
         } catch (IOException ex) {
             log.error(ex.getMessage());
         } finally {
-            releaseRequestResources(requestName, closeableHttpResponse, request);
+            try {
+                log.info("Releasing any system resources associated with '{}' request.", name);
+                EntityUtils.consume(closeableHttpResponse.getEntity());
+                closeableHttpResponse.close();
+                request.reset();
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
         }
-        return response;
+        return result;
     }
 }

@@ -1,4 +1,4 @@
-package com.coherentsolutions.dto;
+package com.coherentsolutions.data.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
