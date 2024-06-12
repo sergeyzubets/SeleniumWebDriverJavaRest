@@ -21,17 +21,17 @@ public class GeneralUtil {
     }
 
     @Step("Sending request.")
-    public static void logRequest(String requestName, HttpUriRequestBase request) {
-        log.info(new Request("'" + requestName + "' request", new RequestLine(request), request.getHeaders(), request.getEntity()).toString());
+    public static void logRequest(String name, HttpUriRequestBase request) {
+        log.info(new Request("'" + name + "' request", new RequestLine(request), request.getHeaders(), request.getEntity()).toString());
     }
 
     @Step("Sending request.")
-    public static void logRequest(String requestName, HttpUriRequestBase request, String requestBody) {
-        log.info(new Request("'" + requestName + "' request", new RequestLine(request), request.getHeaders(), request.getEntity(), requestBody).toString());
+    public static void logRequest(String name, HttpUriRequestBase request, String requestBody) {
+        log.info(new Request("'" + name + "' request", new RequestLine(request), request.getHeaders(), request.getEntity(), requestBody).toString());
     }
 
     @Step("Getting response.")
-    public static void logResponse(String responseName, ClassicHttpResponse response, String responseBody) {
-        log.info(new Response("'" + responseName + "' response", response.getVersion().format(), response.getHeaders(), response.getEntity(), responseBody).toString());
+    public static void logResponse(String name, ClassicHttpResponse response, String responseBody) {
+        log.info(new Response("'" + name + "' response", response.getVersion().format(), response.getHeaders(), response.getEntity(), responseBody).toString());
     }
 }

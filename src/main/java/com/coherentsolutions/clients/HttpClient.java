@@ -1,8 +1,8 @@
 package com.coherentsolutions.clients;
 
 import com.coherentsolutions.models.User;
+import com.coherentsolutions.utils.Scope;
 import io.qameta.allure.Step;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
@@ -15,7 +15,6 @@ import java.util.List;
 import static com.coherentsolutions.utils.JsonUtil.readUserCredentialsFile;
 
 @Slf4j
-@Getter
 public class HttpClient extends BaseClient {
     private static ThreadLocal<CloseableHttpClient> threadLocal = new ThreadLocal<>();
 
@@ -61,5 +60,13 @@ public class HttpClient extends BaseClient {
                 new AuthScope(HOST, PORT),
                 new UsernamePasswordCredentials(user.getUsername(), user.getPassword().toCharArray())));
         return credentialsProvider;
+    }
+
+    public static String getReadToken() {
+        return new AuthorizationClient().getToken(HttpClient.getHttpClientInstance(), Scope.READ);
+    }
+
+    public static String getWriteToken() {
+        return new AuthorizationClient().getToken(HttpClient.getHttpClientInstance(), Scope.WRITE);
     }
 }

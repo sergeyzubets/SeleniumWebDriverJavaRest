@@ -18,17 +18,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ZipCodeClientUtil extends GeneralUtil {
 
     @Step("Adding unique Zip Code to the application.")
-    public static ZipCodeDTO addUniqueZipCodeToApp(CloseableHttpClient httpClient, String readToken, String writeToken) {
-        ZipCodeDTO newZipCode = getNonexistentZipCode(httpClient, readToken);
+    public static ZipCodeDTO addUniqueZipCodeToApp(CloseableHttpClient httpClient) {
+        ZipCodeDTO newZipCode = getNonexistentZipCode(httpClient);
         List<ZipCodeDTO> zipCodesToAdd = List.of(newZipCode);
-        new ZipCodeClient().sendPostExpandZipCodesRequest(httpClient, writeToken, zipCodesToAdd);
+        new ZipCodeClient().createZipCodes(httpClient, zipCodesToAdd);
         return newZipCode;
     }
 
-    public static ZipCodeDTO getNonexistentZipCode(CloseableHttpClient httpClient, String readToken) {
+    public static ZipCodeDTO getNonexistentZipCode(CloseableHttpClient httpClient) {
         ZipCodeClient zipCodeClient = new ZipCodeClient();
-        zipCodeClient.sendGetAvailableZipCodesRequest(httpClient, readToken);
-        List<ZipCodeDTO> availableZipCodes = zipCodeClient.getZipCodes();
+        List<ZipCodeDTO> availableZipCodes = (List<ZipCodeDTO>) zipCodeClient.getZipCodes(httpClient).getParsedBody();
 
         long whileStartTime = System.currentTimeMillis();
         ZipCodeDTO nonexistentZipCode;
@@ -51,18 +50,16 @@ public class ZipCodeClientUtil extends GeneralUtil {
         return FAKER.address().zipCode();
     }
 
-    public static ZipCodeDTO getDuplicatedAvailableZipCode(CloseableHttpClient httpClient, String readToken) {
-        List<ZipCodeDTO> availableZipCodes = getAvailableZipCodes(httpClient, readToken);
+    public static ZipCodeDTO getDuplicatedAvailableZipCode(CloseableHttpClient httpClient) {
+        List<ZipCodeDTO> availableZipCodes = (List<ZipCodeDTO>) new ZipCodeClient().getZipCodes(httpClient).getParsedBody();
         return availableZipCodes.get(new Random().nextInt(availableZipCodes.size() - 1));
     }
 
-    public static List<ZipCodeDTO> getAvailableZipCodes(CloseableHttpClient httpClient, String readToken) {
-        ZipCodeClient zipCodeClient = new ZipCodeClient();
-        zipCodeClient.sendGetAvailableZipCodesRequest(httpClient, readToken);
-        return zipCodeClient.getZipCodes();
+    public static List<ZipCodeDTO> getAvailableZipCodes(CloseableHttpClient httpClient) {
+        return (List<ZipCodeDTO>) new ZipCodeClient().getZipCodes(httpClient).getParsedBody();
     }
 
-    public static int getZipCodeRepetitionCount(List<ZipCodeDTO> zipCodes, ZipCodeDTO zipCodeToFind) {
+    public static int getZipCodeRepetitionCount(List<?> zipCodes, ZipCodeDTO zipCodeToFind) {
         AtomicInteger repetitionCount = new AtomicInteger();
         zipCodes.forEach(zipCode -> {
             if (zipCode.equals(zipCodeToFind)) {

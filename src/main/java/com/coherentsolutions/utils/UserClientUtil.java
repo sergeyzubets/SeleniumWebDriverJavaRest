@@ -42,10 +42,8 @@ public class UserClientUtil extends GeneralUtil {
     }
 
     @Step("Getting unique user with all fields populated.")
-    public static UserDTO getUniqueUser(CloseableHttpClient httpClient, String readToken, ZipCodeDTO zipCode) {
-        UserClient userClient = new UserClient();
-        userClient.sendGetUsersRequest(httpClient, readToken);
-        List<UserDTO> availableUsers = userClient.getUsers();
+    public static UserDTO getUniqueUser(CloseableHttpClient httpClient, ZipCodeDTO zipCode) {
+        List<UserDTO> availableUsers = (List<UserDTO>) new UserClient().getUsers(httpClient).getParsedBody();
 
         long whileStartTime = System.currentTimeMillis();
         UserDTO uniqueUser;

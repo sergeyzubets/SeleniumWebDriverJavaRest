@@ -12,33 +12,33 @@ import java.util.Arrays;
 
 @Slf4j
 public class Request {
-    private final String requestName;
+    private final String name;
     private final RequestLine requestLine;
     private final Header[] headers;
     private final HttpEntity httpEntity;
-    private String requestBody;
+    private String body;
 
-    public Request(String requestName, RequestLine requestLine, Header[] headers, HttpEntity httpEntity) {
-        this.requestName = requestName;
+    public Request(String name, RequestLine requestLine, Header[] headers, HttpEntity httpEntity) {
+        this.name = name;
         this.requestLine = requestLine;
         this.headers = headers;
         this.httpEntity = httpEntity;
-        this.requestBody = getRequestBody(httpEntity);
+        this.body = getBody(httpEntity);
     }
 
-    public Request(String requestName, RequestLine requestLine, Header[] headers, HttpEntity httpEntity, String requestBody) {
-        this.requestName = requestName;
+    public Request(String name, RequestLine requestLine, Header[] headers, HttpEntity httpEntity, String body) {
+        this.name = name;
         this.requestLine = requestLine;
         this.headers = headers;
         this.httpEntity = httpEntity;
-        this.requestBody = requestBody;
+        this.body = body;
     }
 
-    private String getRequestBody(HttpEntity httpEntity) {
+    private String getBody(HttpEntity httpEntity) {
         String result = null;
 
         try {
-            result = httpEntity != null ? requestBody = EntityUtils.toString(httpEntity) : "empty";
+            result = httpEntity != null ? body = EntityUtils.toString(httpEntity) : "empty";
         } catch (IOException | ParseException e) {
             log.error(e.getMessage());
         }
@@ -47,10 +47,10 @@ public class Request {
 
     @Override
     public String toString() {
-        return "requestName = " + requestName +
+        return "name = " + name +
                 "\nrequestLine = " + requestLine +
                 "\nheaders = " + Arrays.toString(headers) +
                 "\nhttpEntity = " + httpEntity +
-                "\nrequestBody = " + requestBody;
+                "\nbody = " + body;
     }
 }
