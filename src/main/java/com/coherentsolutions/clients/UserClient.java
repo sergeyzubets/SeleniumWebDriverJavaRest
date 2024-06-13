@@ -17,8 +17,8 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import java.net.URI;
 import java.util.List;
 
+import static com.coherentsolutions.utils.GeneralUtil.convertUserToJsonBody;
 import static com.coherentsolutions.utils.GeneralUtil.logRequest;
-import static com.coherentsolutions.utils.UserClientUtil.convertUserToJsonBody;
 
 @Slf4j
 public class UserClient extends BaseClient {
@@ -38,7 +38,6 @@ public class UserClient extends BaseClient {
 
         String requestName = "Create a user request";
         logRequest(requestName, httpPost, requestBody);
-
        return sendRequest(httpClient, httpPost, requestName, HttpStatus.SC_CREATED);
     }
 

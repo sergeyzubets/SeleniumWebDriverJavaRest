@@ -17,8 +17,8 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import java.net.URI;
 import java.util.List;
 
+import static com.coherentsolutions.utils.GeneralUtil.convertEntityToBody;
 import static com.coherentsolutions.utils.GeneralUtil.logRequest;
-import static com.coherentsolutions.utils.ZipCodeClientUtil.convertEntityToBody;
 
 @Slf4j
 public class ZipCodeClient extends BaseClient {

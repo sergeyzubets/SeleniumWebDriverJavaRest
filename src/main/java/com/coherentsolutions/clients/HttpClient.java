@@ -1,7 +1,7 @@
 package com.coherentsolutions.clients;
 
-import com.coherentsolutions.data.models.User;
 import com.coherentsolutions.data.Scope;
+import com.coherentsolutions.data.models.User;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -73,5 +73,4 @@ public class HttpClient extends BaseClient {
         readToken = new AuthorizationClient().getToken(httpClient, Scope.READ);
         writeToken = new AuthorizationClient().getToken(httpClient, Scope.WRITE);
     }
-
 }
