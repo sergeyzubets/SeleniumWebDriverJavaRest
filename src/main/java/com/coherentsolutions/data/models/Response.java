@@ -19,7 +19,13 @@ public class Response {
     private Header[] headers;
     private HttpEntity httpEntity;
     private String body;
+    private FailedResponseBody failedBody;
     private List<?> parsedBody;
+
+    public Response(int code, FailedResponseBody failedBody) {
+        this.code = code;
+        this.failedBody = failedBody;
+    }
 
     public Response(int code, List<?> parsedBody) {
         this.code = code;
@@ -31,7 +37,7 @@ public class Response {
         this.statusLine = statusLine;
         this.headers = headers;
         this.httpEntity = httpEntity;
-        this.body = body;
+        this.body = body.isEmpty() ? "empty" : body;
     }
 
     @Override

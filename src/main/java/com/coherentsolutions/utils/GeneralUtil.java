@@ -23,6 +23,7 @@ import java.util.Random;
 
 @Slf4j
 public class GeneralUtil {
+    private static final long WHILE_LIFETIME_SEC = 20;
     private static final Faker FAKER = new Faker();
 
     public static void logTokenDetails(AccessTokenDTO token, String scope) {
@@ -81,5 +82,14 @@ public class GeneralUtil {
             log.error(e.getMessage());
         }
         return requestBody;
+    }
+
+    public static boolean keepWhile(long whileStartTime) {
+        boolean result = true;
+        if (System.currentTimeMillis() >= whileStartTime + WHILE_LIFETIME_SEC * 1000) {
+            log.error("While was interrupted by timeout.");
+            result = false;
+        }
+        return result;
     }
 }

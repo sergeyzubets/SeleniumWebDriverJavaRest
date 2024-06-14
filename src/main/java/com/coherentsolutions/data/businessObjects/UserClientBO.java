@@ -14,28 +14,43 @@ import static com.coherentsolutions.utils.GeneralUtil.*;
 public class UserClientBO extends BaseBO {
 
     @Step("Getting unique user with all fields populated.")
-    public UserDTO getUniqueUser(CloseableHttpClient httpClient, ZipCodeDTO zipCode) {
-        List<UserDTO> availableUsers = getAvailableUsers(httpClient);
-
+    public UserDTO getUniqueUser(CloseableHttpClient httpClient, ZipCodeDTO zipCode, int code) {
+        List<UserDTO> availableUsers = getAvailableUsers(httpClient, code);
+        UserDTO uniqueUser = new UserDTO();
+        boolean running = true;
         long whileStartTime = System.currentTimeMillis();
-        UserDTO uniqueUser;
 
-        while (true) {
+        while (running) {
             uniqueUser = new UserDTO(getRandomUserName(), getRandomGender(), getRandomAge(), zipCode);
             if (!availableUsers.contains(uniqueUser)) {
                 break;
             }
+            running = keepWhile(whileStartTime);
+        }
+        return uniqueUser;
+    }
 
-            if (System.currentTimeMillis() >= whileStartTime + WHILE_LIFETIME_SEC * 1000) {
-                log.warn(WHILE_INTERRUPTION_MESSAGE);
+    @Step("Getting unique user with mandatory fields populated.")
+    public UserDTO getUniqueUser(CloseableHttpClient httpClient, int code) {
+        List<UserDTO> availableUsers = getAvailableUsers(httpClient, code);
+        UserDTO uniqueUser = new UserDTO();
+        boolean running = true;
+        long whileStartTime = System.currentTimeMillis();
+
+        while (running) {
+            uniqueUser = new UserDTO(getRandomUserName(), getRandomGender());
+            if (!availableUsers.contains(uniqueUser)) {
                 break;
             }
+            running = keepWhile(whileStartTime);
         }
         return uniqueUser;
     }
 
     @Step("Getting all available in the application users.")
-    public List<UserDTO> getAvailableUsers(CloseableHttpClient httpClient) {
-        return (List<UserDTO>) userClient.getUsers(httpClient).getParsedBody();
+    public List<UserDTO> getAvailableUsers(CloseableHttpClient httpClient, int code) {
+        return (List<UserDTO>) userClient.getUsers(httpClient, code).getParsedBody();
     }
+
+
 }

@@ -7,7 +7,7 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 
 @Suite
 @IncludeTags({"smoke", "regression"})
-@SelectPackages({"com.coherentsolutions.zipCodeClient"})
+@SelectPackages({"com.coherentsolutions.zipCodeClient", "com.coherentsolutions.userClient"})
 @SuiteDisplayName("Full Regression Test Suite")
 public class RegressionTest {
 }
