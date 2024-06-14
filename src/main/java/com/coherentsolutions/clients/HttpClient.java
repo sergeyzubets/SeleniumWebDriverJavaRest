@@ -1,8 +1,9 @@
 package com.coherentsolutions.clients;
 
-import com.coherentsolutions.data.models.User;
 import com.coherentsolutions.data.Scope;
+import com.coherentsolutions.data.models.User;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
@@ -17,6 +18,10 @@ import static com.coherentsolutions.utils.JsonUtil.readUserCredentialsFile;
 @Slf4j
 public class HttpClient extends BaseClient {
     private static ThreadLocal<CloseableHttpClient> threadLocal = new ThreadLocal<>();
+    @Getter
+    private static String readToken;
+    @Getter
+    private static String writeToken;
 
     private HttpClient() {
     }
@@ -28,6 +33,7 @@ public class HttpClient extends BaseClient {
 
         CloseableHttpClient httpClient = configureHttpClient();
         threadLocal.set(httpClient);
+        getTokens(threadLocal.get());
         return threadLocal.get();
     }
 
@@ -62,11 +68,9 @@ public class HttpClient extends BaseClient {
         return credentialsProvider;
     }
 
-    public static String getReadToken() {
-        return new AuthorizationClient().getToken(HttpClient.getHttpClientInstance(), Scope.READ);
-    }
-
-    public static String getWriteToken() {
-        return new AuthorizationClient().getToken(HttpClient.getHttpClientInstance(), Scope.WRITE);
+    @Step("Getting read&write access tokens for httpClient instance.")
+    public static void getTokens(CloseableHttpClient httpClient) {
+        readToken = new AuthorizationClient().getToken(httpClient, Scope.READ);
+        writeToken = new AuthorizationClient().getToken(httpClient, Scope.WRITE);
     }
 }

@@ -1,8 +1,8 @@
 package com.coherentsolutions.clients;
 
+import com.coherentsolutions.data.Scope;
 import com.coherentsolutions.data.dto.AccessTokenDTO;
 import com.coherentsolutions.data.models.Response;
-import com.coherentsolutions.data.Scope;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;

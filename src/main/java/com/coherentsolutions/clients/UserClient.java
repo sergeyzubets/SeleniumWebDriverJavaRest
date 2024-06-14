@@ -1,6 +1,7 @@
 package com.coherentsolutions.clients;
 
 import com.coherentsolutions.data.dto.UserDTO;
+import com.coherentsolutions.data.models.FailedResponseBody;
 import com.coherentsolutions.data.models.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -11,19 +12,18 @@ import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
-import org.apache.hc.core5.http.HttpStatus;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 
 import java.net.URI;
 import java.util.List;
 
+import static com.coherentsolutions.utils.GeneralUtil.convertUserToJsonBody;
 import static com.coherentsolutions.utils.GeneralUtil.logRequest;
-import static com.coherentsolutions.utils.UserClientUtil.convertUserToJsonBody;
 
 @Slf4j
 public class UserClient extends BaseClient {
 
-    public Response createUser(CloseableHttpClient httpClient, UserDTO userToAdd) {
+    public Response createUser(CloseableHttpClient httpClient, UserDTO userToAdd, int code) {
         String path = "/users";
         URI uri = getUri(path);
 
@@ -39,10 +39,22 @@ public class UserClient extends BaseClient {
         String requestName = "Create a user request";
         logRequest(requestName, httpPost, requestBody);
 
-       return sendRequest(httpClient, httpPost, requestName, HttpStatus.SC_CREATED);
+        Response response = sendRequest(httpClient, httpPost, requestName, code);
+        FailedResponseBody body = new FailedResponseBody();
+
+        try {
+            if(!response.getBody().isEmpty()) {
+                body = new ObjectMapper().readValue(response.getBody(), new TypeReference<>() {
+                });
+            }
+            return new Response(response.getCode(), body);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
-    public Response getUsers(CloseableHttpClient httpClient) {
+    public Response getUsers(CloseableHttpClient httpClient, int code) {
         String path = "/users";
         URI uri =getUri(path);
 
@@ -52,7 +64,7 @@ public class UserClient extends BaseClient {
 
         String requestName = "Get all users";
         logRequest(requestName, httpGet);
-        Response response = sendRequest(httpClient, httpGet, requestName, HttpStatus.SC_OK);
+        Response response = sendRequest(httpClient, httpGet, requestName, code);
 
         try {
             List<UserDTO> users = new ObjectMapper().readValue(response.getBody(), new TypeReference<>() {

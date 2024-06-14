@@ -7,7 +7,7 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 
 @Suite
 @IncludeTags("smoke")
-@SelectPackages({"com.coherentsolutions.zipCodeClient"})
+@SelectPackages({"com.coherentsolutions.zipCodeClient", "com.coherentsolutions.userClient"})
 @SuiteDisplayName("Smoke Test Suite")
 public class SmokeTest {
 }

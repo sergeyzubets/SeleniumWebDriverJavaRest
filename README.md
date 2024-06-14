@@ -14,7 +14,7 @@ The project was created in order to test REST web-service.
 ## Build Specification
 * Java version [11.0.23](https://www.oracle.com/pl/java/technologies/javase/jdk11-archive-downloads.html)
 * Maven version [3.9.0](https://maven.apache.org/docs/3.9.0/release-notes.html)
-* IntelliJ IDEA (Community Edition) [2024.1.1](https://www.jetbrains.com/idea/download)
+* IntelliJ IDEA (Community Edition) [2024.1.3](https://www.jetbrains.com/idea/download)
 * jUnit version [5.11.0-M2](https://mvnrepository.com/artifact/org.junit/junit-bom)
 * Allure version [2.27.0](https://mvnrepository.com/artifact/io.qameta.allure/allure-junit5)
 * Docker Desktop version [4.30.0](https://www.docker.com/products/docker-desktop/)

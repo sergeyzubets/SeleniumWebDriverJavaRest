@@ -11,19 +11,18 @@ import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
-import org.apache.hc.core5.http.HttpStatus;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 
 import java.net.URI;
 import java.util.List;
 
+import static com.coherentsolutions.utils.GeneralUtil.convertEntityToBody;
 import static com.coherentsolutions.utils.GeneralUtil.logRequest;
-import static com.coherentsolutions.utils.ZipCodeClientUtil.convertEntityToBody;
 
 @Slf4j
 public class ZipCodeClient extends BaseClient {
 
-    public Response getZipCodes(CloseableHttpClient httpClient) {
+    public Response getZipCodes(CloseableHttpClient httpClient, int code) {
         String path = "/zip-codes";
         URI uri = getUri(path);
 
@@ -32,7 +31,7 @@ public class ZipCodeClient extends BaseClient {
         httpGet.addHeader("accept", "*/*");
         String requestName = "Get available zip codes";
         logRequest(requestName, httpGet);
-        Response response = sendRequest(httpClient, httpGet, requestName, HttpStatus.SC_OK);
+        Response response = sendRequest(httpClient, httpGet, requestName, code);
 
         try {
             List<ZipCodeDTO> zipCodes = new ObjectMapper().readValue(response.getBody(), new TypeReference<>() {
@@ -44,7 +43,7 @@ public class ZipCodeClient extends BaseClient {
         }
     }
 
-    public Response createZipCodes(CloseableHttpClient httpClient, List<ZipCodeDTO> zipCodesToAdd) {
+    public Response createZipCodes(CloseableHttpClient httpClient, List<ZipCodeDTO> zipCodesToAdd, int code) {
         String path = "/zip-codes/expand";
         URI uri = getUri(path);
 
@@ -59,7 +58,7 @@ public class ZipCodeClient extends BaseClient {
         String requestBody = convertEntityToBody(stringEntity);
         String requestName = "Expand available zip codes";
         logRequest(requestName, httpPost, requestBody);
-        Response response = sendRequest(httpClient, httpPost, requestName, HttpStatus.SC_CREATED);
+        Response response = sendRequest(httpClient, httpPost, requestName, code);
 
         try {
             List<ZipCodeDTO> zipCodes = new ObjectMapper().readValue(response.getBody(), new TypeReference<>() {
