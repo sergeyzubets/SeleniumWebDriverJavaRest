@@ -23,8 +23,9 @@ import java.util.Random;
 
 @Slf4j
 public class GeneralUtil {
-    private static final long WHILE_LIFETIME_SEC = 20;
     private static final Faker FAKER = new Faker();
+    private static final long WHILE_LIFETIME_SEC = 20;
+    private static final int MAX_USER_AGE = 120;
 
     public static void logTokenDetails(AccessTokenDTO token, String scope) {
         log.warn("{} access token expires in {} hours.", scope.toUpperCase(), String.format("%.3f", (double) token.getExpiresIn() / 3600));
@@ -69,8 +70,7 @@ public class GeneralUtil {
     }
 
     public static Integer getRandomAge() {
-        int maxUserAge = 120;
-        return new Random().nextInt(maxUserAge);
+        return new Random().nextInt(MAX_USER_AGE);
     }
 
     public static String convertUserToJsonBody(UserDTO user) {

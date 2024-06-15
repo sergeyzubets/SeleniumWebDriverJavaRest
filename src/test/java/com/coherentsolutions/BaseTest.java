@@ -28,8 +28,6 @@ public class BaseTest {
     protected UserClient userClient;
     protected ZipCodeClientBO zipCodeClientBO;
     protected UserClientBO userClientBO;
-    protected static final String RESPONSE_CODE_FAILURE = "Response code is not valid.";
-    protected static final String ERROR_MESSAGE_FAILURE = "Error message is not correct.";
 
     public BaseTest() {
         zipCodeClient = new ZipCodeClient();
