@@ -6,7 +6,7 @@ import com.coherentsolutions.clients.ZipCodeClient;
 import com.coherentsolutions.data.businessObjects.UserClientBO;
 import com.coherentsolutions.data.businessObjects.ZipCodeClientBO;
 import com.coherentsolutions.data.dto.UserDTO;
-import com.google.common.collect.ImmutableMap;
+import com.coherentsolutions.data.models.Parameter;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -16,10 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import java.util.List;
 
-import static com.coherentsolutions.utils.GeneralUtil.getRandomGender;
-import static com.coherentsolutions.utils.GeneralUtil.getRandomUserName;
-import static com.github.automatedowl.tools.AllureEnvironmentWriter.allureEnvironmentWriter;
-
+import static com.coherentsolutions.utils.GeneralUtil.*;
 
 @Slf4j
 public class BaseTest {
@@ -51,12 +48,13 @@ public class BaseTest {
     @AfterAll
     public static void tearDown() {
         //TODO add user clean up method as part of tear down
-        allureEnvironmentWriter(
-                ImmutableMap.<String, String>builder()
-                        .put("Docker image scheme", System.getProperty("scheme"))
-                        .put("Docker image host", System.getProperty("host"))
-                        .put("Docker image port", System.getProperty("port"))
-                        .build());
+        writeAllureEnvironmentFile(
+                List.of(
+                        new Parameter("Docker image scheme", System.getProperty("scheme")),
+                        new Parameter("Docker image host", System.getProperty("host")),
+                        new Parameter("Docker image port", System.getProperty("port"))
+                )
+        );
     }
 
     protected static List<UserDTO> missedRequiredFieldsUser() {

@@ -13,12 +13,12 @@
         <lombok.version>1.18.32</lombok.version>
         <logback.version>1.5.6</logback.version>
         <slf4j.api.version>2.0.13</slf4j.api.version>
-        <jackson.databind.version>2.15.3</jackson.databind.version>
+        <jackson.databind.version>2.17.1</jackson.databind.version>
+        <jackson.dataformat-xml.version>2.17.1</jackson.dataformat-xml.version>
         <apache.http.client.version>5.3.1</apache.http.client.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <allure-junit5.version>2.27.0</allure-junit5.version>
-        <allure-environment-writer.version>1.0.0</allure-environment-writer.version>
         <junit-jupiter.version>5.11.0-M2</junit-jupiter.version>
         <junit-jupiter-params.version>5.11.0-M2</junit-jupiter-params.version>
         <junit-platform-suite-engine.version>1.11.0-M2</junit-platform-suite-engine.version>
@@ -55,6 +55,11 @@
             <version>${jackson.databind.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>${jackson.dataformat-xml.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
             <version>${apache.http.client.version}</version>
@@ -63,11 +68,6 @@
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit5</artifactId>
             <version>${allure-junit5.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.automatedowl</groupId>
-            <artifactId>allure-environment-writer</artifactId>
-            <version>${allure-environment-writer.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>
