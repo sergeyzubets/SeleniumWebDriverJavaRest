@@ -18,10 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.coherentsolutions.data.ErrorMessages.Common.ERROR_MESSAGE_FAILURE;
-import static com.coherentsolutions.data.ErrorMessages.Common.RESPONSE_CODE_FAILURE;
-import static com.coherentsolutions.data.ErrorMessages.PredefinedErrorMessages.CONFLICT_PARAMETERS;
-import static com.coherentsolutions.data.ErrorMessages.UserClient.*;
+import static com.coherentsolutions.data.ErrorMessages.*;
 import static com.coherentsolutions.utils.GeneralUtil.getRandomAge;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -90,6 +87,7 @@ public class GetUserTest extends BaseTest {
 
         assertAll("Get all users older than value test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
+                () -> assertFalse(actualUsers.isEmpty(), USERS_LIST_SIZE_FAILURE),
                 () -> expectedUsers.forEach(user -> assertTrue(actualUsers.contains(user), PARAMETRIZED_LIST_FAILURE + user)),
                 () -> actualUsers.forEach(user -> assertTrue(expectedUsers.contains(user), PARAMETRIZED_LIST_EXTRA_USER_FAILURE + user))
         );
@@ -124,6 +122,7 @@ public class GetUserTest extends BaseTest {
 
         assertAll("Get all users younger than value test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
+                () -> assertFalse(actualUsers.isEmpty(), USERS_LIST_SIZE_FAILURE),
                 () -> expectedUsers.forEach(user -> assertTrue(actualUsers.contains(user), PARAMETRIZED_LIST_FAILURE + user)),
                 () -> actualUsers.forEach(user -> assertTrue(expectedUsers.contains(user), PARAMETRIZED_LIST_EXTRA_USER_FAILURE + user))
         );
@@ -156,6 +155,7 @@ public class GetUserTest extends BaseTest {
 
         assertAll("Get all users with specified gender test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
+                () -> assertFalse(actualUsers.isEmpty(), USERS_LIST_SIZE_FAILURE),
                 () -> expectedUsers.forEach(user -> assertTrue(actualUsers.contains(user), PARAMETRIZED_LIST_FAILURE + user)),
                 () -> actualUsers.forEach(user -> assertTrue(expectedUsers.contains(user), PARAMETRIZED_LIST_EXTRA_USER_FAILURE + user))
         );
@@ -196,6 +196,7 @@ public class GetUserTest extends BaseTest {
 
         assertAll("Get all users with specified gender and younger than value test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
+                () -> assertFalse(actualUsers.isEmpty(), USERS_LIST_SIZE_FAILURE),
                 () -> expectedUsers.forEach(user -> assertTrue(actualUsers.contains(user), PARAMETRIZED_LIST_FAILURE + user)),
                 () -> actualUsers.forEach(user -> assertTrue(expectedUsers.contains(user), PARAMETRIZED_LIST_EXTRA_USER_FAILURE + user))
         );
@@ -236,6 +237,7 @@ public class GetUserTest extends BaseTest {
 
         assertAll("Get all users with specified gender and older than value test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
+                () -> assertFalse(actualUsers.isEmpty(), USERS_LIST_SIZE_FAILURE),
                 () -> expectedUsers.forEach(user -> assertTrue(actualUsers.contains(user), PARAMETRIZED_LIST_FAILURE + user)),
                 () -> actualUsers.forEach(user -> assertTrue(expectedUsers.contains(user), PARAMETRIZED_LIST_EXTRA_USER_FAILURE + user))
         );
