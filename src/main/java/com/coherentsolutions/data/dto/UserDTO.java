@@ -15,7 +15,7 @@ public class UserDTO {
     @JsonProperty("sex")
     private Gender gender;
     private String name;
-    private int age;
+    private Integer age;
     private String zipCode;
 
     public UserDTO(String name, Gender gender) {

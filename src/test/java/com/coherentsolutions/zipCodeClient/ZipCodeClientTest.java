@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.coherentsolutions.data.ErrorMessages.RESPONSE_CODE_FAILURE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Epic("REST API test.")
@@ -22,7 +23,7 @@ public class ZipCodeClientTest extends BaseTest {
     @Story("Task 20 - Get available zip codes and add more to the list.")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("smoke")
-    @DisplayName("Get all available zip codes test.")
+    @DisplayName("Get all available zip codes test")
     @Description("Scenario #1: The test verifies ability to get all available zip codes in the application for now.")
     @Test
     public void getAvailableZipCodesTest() {
@@ -35,13 +36,14 @@ public class ZipCodeClientTest extends BaseTest {
 
         assertAll("GET all available zip codes test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
-                () -> assertTrue(actualZipCodes.contains(newZipCode), "List of available zip codes does not contain added one."));
+                () -> assertTrue(actualZipCodes.contains(newZipCode), "List of available zip codes does not contain added one.")
+        );
     }
 
     @Story("Task 20 - Get available zip codes and add more to the list.")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("smoke")
-    @DisplayName("Expand zip codes test.")
+    @DisplayName("Expand zip codes test")
     @Description("Scenario #2: The test verifies ability to add new zip codes to the application.")
     @Test
     public void expandZipCodesTest() {
@@ -58,14 +60,15 @@ public class ZipCodeClientTest extends BaseTest {
                 () -> assertTrue(actualZipCodes.contains(zipCodeToAdd1),
                         "Zip code " + zipCodeToAdd1 + " has not been added."),
                 () -> assertTrue(actualZipCodes.contains(zipCodeToAdd2),
-                        "Zip code " + zipCodeToAdd2 + " has not been added."));
+                        String.format("Zip code %s has not been added.", zipCodeToAdd2))
+        );
     }
 
     @Issue("Duplicates for available zip codes can be added to the application.")
     @Story("Task 20 - Get available zip codes and add more to the list.")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
-    @DisplayName("Add duplicates for available zip codes test.")
+    @DisplayName("Add duplicates for available zip codes test")
     @Description("Scenario #3: The test verifies that duplicates for available zip codes cannot be added to the application.")
     @Test
     public void addDuplicatesForAvailableZipCodesTest() {
@@ -82,16 +85,17 @@ public class ZipCodeClientTest extends BaseTest {
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
                 () -> assertTrue(actualZipCodes.contains(uniqueZipCode), "List of available zip codes does not contain added one."),
                 () -> assertFalse(actualZipCodes.contains(duplicate1),
-                        "Duplicate for existing code " + duplicate1 + " was added to the application."),
+                        String.format("Duplicate for existing code %s was added to the application.", duplicate1)),
                 () -> assertFalse(actualZipCodes.contains(duplicate2),
-                        "Duplicate for existing code " + duplicate2 + " was added to the application."));
+                        String.format("Duplicate for existing code %s was added to the application.", duplicate2))
+        );
     }
 
     @Issue("Duplicates for used zip codes can be added to the application.")
     @Story("Task 20 - Get available zip codes and add more to the list.")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
-    @DisplayName("Add duplicates for used zip codes test.")
+    @DisplayName("Add duplicates for used zip codes test")
     @Description("Scenario #4: The test verifies that duplicates of available and used zip codes cannot be added to the application.")
     @Test
     public void addDuplicatedForUsedZipCodesTest() {
@@ -111,6 +115,7 @@ public class ZipCodeClientTest extends BaseTest {
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
                 () -> assertTrue(actualZipCodes.contains(uniqueZipCode), "List of available zip codes does not contain added one."),
                 () -> assertFalse(actualZipCodes.contains(usedZipCode),
-                        "Duplicate for used code " + usedZipCode + " was added to the application."));
+                        String.format("Duplicate for used code %s was added to the application.", usedZipCode))
+        );
     }
 }

@@ -5,6 +5,7 @@ import com.coherentsolutions.data.models.FailedResponseBody;
 import com.coherentsolutions.data.models.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -16,6 +17,7 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import static com.coherentsolutions.utils.GeneralUtil.convertUserToJsonBody;
 import static com.coherentsolutions.utils.GeneralUtil.logRequest;
@@ -56,7 +58,7 @@ public class UserClient extends BaseClient {
 
     public Response getUsers(CloseableHttpClient httpClient, int code) {
         String path = "/users";
-        URI uri =getUri(path);
+        URI uri = getUri(path);
 
         HttpGet httpGet = new HttpGet(uri);
         httpGet.addHeader("Authorization", HttpClient.getReadToken());
@@ -70,6 +72,38 @@ public class UserClient extends BaseClient {
             List<UserDTO> users = new ObjectMapper().readValue(response.getBody(), new TypeReference<>() {
             });
             return new Response(response.getCode(), users);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Response getUsers(CloseableHttpClient httpClient, int code, Map<String, String> paramMap) {
+        String path = "/users";
+        URI uri = getUri(path, paramMap);
+
+        HttpGet httpGet = new HttpGet(uri);
+        httpGet.addHeader("Authorization", HttpClient.getReadToken());
+        httpGet.addHeader("accept", "application/json");
+
+        String requestName = "Get all users";
+        logRequest(requestName, httpGet);
+        Response response = sendRequest(httpClient, httpGet, requestName, code);
+        FailedResponseBody body;
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(response.getBody());
+
+            if(root.isArray()) {
+                List<UserDTO> users = new ObjectMapper().readValue(response.getBody(), new TypeReference<>() {
+                });
+                return new Response(response.getCode(), users);
+            } else {
+                body = new ObjectMapper().readValue(response.getBody(), new TypeReference<>() {
+                });
+                return new Response(response.getCode(), body);
+            }
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);

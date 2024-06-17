@@ -3,11 +3,14 @@ package com.coherentsolutions.utils;
 import com.coherentsolutions.data.Gender;
 import com.coherentsolutions.data.dto.AccessTokenDTO;
 import com.coherentsolutions.data.dto.UserDTO;
+import com.coherentsolutions.data.models.Environment;
+import com.coherentsolutions.data.models.Parameter;
 import com.coherentsolutions.data.models.Request;
 import com.coherentsolutions.data.models.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
@@ -18,13 +21,19 @@ import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.RequestLine;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Random;
 
 @Slf4j
 public class GeneralUtil {
-    private static final long WHILE_LIFETIME_SEC = 20;
     private static final Faker FAKER = new Faker();
+    private static final long WHILE_LIFETIME_SEC = 20;
+    private static final int MAX_USER_AGE = 120;
+    private static final Path USER_CREDENTIALS_FILE = Paths.get(System.getProperty("allure.results.directory"), "environment.xml");
 
     public static void logTokenDetails(AccessTokenDTO token, String scope) {
         log.warn("{} access token expires in {} hours.", scope.toUpperCase(), String.format("%.3f", (double) token.getExpiresIn() / 3600));
@@ -69,8 +78,7 @@ public class GeneralUtil {
     }
 
     public static Integer getRandomAge() {
-        int maxUserAge = 120;
-        return new Random().nextInt(maxUserAge);
+        return new Random().nextInt(MAX_USER_AGE);
     }
 
     public static String convertUserToJsonBody(UserDTO user) {
@@ -91,5 +99,15 @@ public class GeneralUtil {
             result = false;
         }
         return result;
+    }
+
+    public static void writeAllureEnvironmentFile(List<Parameter> listOfParameters) {
+        try {
+            new XmlMapper().writeValue(new File(USER_CREDENTIALS_FILE.toString()), new Environment(listOfParameters));
+            log.info("Allure environment data saved.");
+        } catch (IOException e) {
+            log.error("Allure environment data save failed: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 }
