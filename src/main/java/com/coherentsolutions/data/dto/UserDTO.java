@@ -32,10 +32,7 @@ public class UserDTO {
 
     @Override
     public String toString() {
-        return "name=" + name +
-                ", gender=" + gender +
-                ", age=" + age +
-                ", zipCode=" + zipCode;
+        return String.format("name = %s, gender = %s, age = %s, zipCode = %s", name, gender, age, zipCode);
     }
 
     @Override

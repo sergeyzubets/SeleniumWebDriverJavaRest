@@ -2,7 +2,7 @@ package com.coherentsolutions.utils;
 
 import com.coherentsolutions.data.Gender;
 import com.coherentsolutions.data.dto.AccessTokenDTO;
-import com.coherentsolutions.data.dto.UserDTO;
+import com.coherentsolutions.data.dto.UpdateUserDTO;
 import com.coherentsolutions.data.models.Environment;
 import com.coherentsolutions.data.models.Parameter;
 import com.coherentsolutions.data.models.Request;
@@ -41,17 +41,21 @@ public class GeneralUtil {
 
     @Step("Sending request.")
     public static void logRequest(String name, HttpUriRequestBase request) {
-        log.info(new Request("'" + name + "' request", new RequestLine(request), request.getHeaders(), request.getEntity()).toString());
+        String requestName = String.format("'%s' request", name);
+        log.info(new Request(requestName, new RequestLine(request), request.getHeaders(), request.getEntity()).toString());
     }
 
     @Step("Sending request.")
     public static void logRequest(String name, HttpUriRequestBase request, String requestBody) {
-        log.info(new Request("'" + name + "' request", new RequestLine(request), request.getHeaders(), request.getEntity(), requestBody).toString());
+        String requestName = String.format("'%s' request", name);
+        log.info(new Request(requestName, new RequestLine(request), request.getHeaders(), request.getEntity(), requestBody).toString());
     }
 
     @Step("Getting response.")
-    public static void logResponse(String name, ClassicHttpResponse response, String responseBody) {
-        log.info(new Response("'" + name + "' response", response.getVersion().format(), response.getHeaders(), response.getEntity(), responseBody).toString());
+    public static void logResponse(int code, String name, ClassicHttpResponse response, String responseBody) {
+        String responseName = String.format("'%s' response", name);
+        String statusLine = response.getVersion().format();
+        log.info(new Response(responseName, code, statusLine, response.getHeaders(), response.getEntity(), responseBody).toString());
     }
 
     public static String getRandomZipCode() {
@@ -81,9 +85,10 @@ public class GeneralUtil {
         return new Random().nextInt(MAX_USER_AGE);
     }
 
-    public static String convertUserToJsonBody(UserDTO user) {
+    public static <T> String convertObjectToJson(T user) {
         String requestBody = null;
         ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+
         try {
             requestBody = objectWriter.writeValueAsString(user);
         } catch (JsonProcessingException e) {
@@ -109,5 +114,9 @@ public class GeneralUtil {
             log.error("Allure environment data save failed: {}", e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+
+    public static String removeLineFromBody(UpdateUserDTO updateUser) {
+        return convertObjectToJson(updateUser).replace(" \"zipCode\" : null,", "");
     }
 }

@@ -32,8 +32,9 @@ public class Response {
         this.parsedBody = parsedBody;
     }
 
-    public Response(String name, String statusLine, Header[] headers, HttpEntity httpEntity, String body) {
+    public Response(String name, int code, String statusLine, Header[] headers, HttpEntity httpEntity, String body) {
         this.name = name;
+        this.code = code;
         this.statusLine = statusLine;
         this.headers = headers;
         this.httpEntity = httpEntity;
@@ -42,10 +43,7 @@ public class Response {
 
     @Override
     public String toString() {
-        return "name = " + name +
-                "\nstatusLine = " + statusLine +
-                "\nheaders = " + Arrays.toString(headers) +
-                "\nhttpEntity = " + httpEntity +
-                "\nresponseBody = " + body;
+        return String.format("name = %s\nstatusLine = %s\nresponseCode = %s\nheaders = %s\nhttpEntity = %s\nresponseBody = %s",
+                name, statusLine, code, Arrays.toString(headers), httpEntity, body);
     }
 }

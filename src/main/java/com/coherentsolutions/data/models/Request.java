@@ -47,10 +47,7 @@ public class Request {
 
     @Override
     public String toString() {
-        return "name = " + name +
-                "\nrequestLine = " + requestLine +
-                "\nheaders = " + Arrays.toString(headers) +
-                "\nhttpEntity = " + httpEntity +
-                "\nbody = " + body;
+        return String.format("name = %s\nrequestLine = %s\nheaders = %s\nhttpEntity = %s\nrequestBody = %s",
+                name, requestLine, Arrays.toString(headers), httpEntity, body);
     }
 }
