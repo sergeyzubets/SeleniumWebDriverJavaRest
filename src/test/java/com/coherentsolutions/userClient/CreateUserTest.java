@@ -16,7 +16,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 
-import static com.coherentsolutions.data.ErrorMessages.*;
+import static com.coherentsolutions.data.ErrorMessages.Common.ERROR_MESSAGE_FAILURE;
+import static com.coherentsolutions.data.ErrorMessages.Common.RESPONSE_CODE_FAILURE;
+import static com.coherentsolutions.data.ErrorMessages.PredefinedErrorMessages.*;
+import static com.coherentsolutions.data.ErrorMessages.UserClient.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Epic("REST API test.")

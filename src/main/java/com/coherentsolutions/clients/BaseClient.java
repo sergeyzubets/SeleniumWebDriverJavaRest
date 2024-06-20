@@ -96,7 +96,7 @@ public abstract class BaseClient {
                     log.warn("Response contains no content.");
                 } else {
                     body.set(EntityUtils.toString(entity, StandardCharsets.UTF_8));
-                    logResponse(name, response, body.get());
+                    logResponse(statusCode, name, response, body.get());
                     result.setBody(body.get());
                 }
                 return response;

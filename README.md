@@ -17,7 +17,7 @@ The project was created in order to test REST web-service.
 * IntelliJ IDEA (Community Edition) [2024.1.3](https://www.jetbrains.com/idea/download)
 * jUnit version [5.11.0-M2](https://mvnrepository.com/artifact/org.junit/junit-bom)
 * Allure version [2.27.0](https://mvnrepository.com/artifact/io.qameta.allure/allure-junit5)
-* Docker Desktop version [4.30.0](https://www.docker.com/products/docker-desktop/)
+* Docker Desktop version [4.31.1](https://www.docker.com/products/docker-desktop/)
 ## Running the test
 * The project can be run on Docker environment.
 * Maven parameters to use:

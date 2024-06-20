@@ -13,6 +13,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "username=" + username + ", password=" + password;
+        return String.format("username = %s, password = %s", username, password);
     }
 }

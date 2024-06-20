@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static com.coherentsolutions.data.ErrorMessages.RESPONSE_CODE_FAILURE;
+import static com.coherentsolutions.data.ErrorMessages.Common.RESPONSE_CODE_FAILURE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Epic("REST API test.")
