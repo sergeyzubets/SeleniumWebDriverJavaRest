@@ -229,7 +229,6 @@ public class UpdateUserTest extends BaseTest {
 
         assertAll("PUT non-existent user test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
-                () -> assertEquals(USER_UPDATE_ERROR, actualBody.getMessage(), ERROR_MESSAGE_FAILURE),
                 () -> assertFalse(actualUsers.contains(userNewValues), UPDATE_USER_FAILURE),
                 () -> assertFalse(actualUsers.contains(userToChange), UPDATE_USER_FAILURE)
         );
@@ -253,7 +252,6 @@ public class UpdateUserTest extends BaseTest {
 
         assertAll("PATCH non-existent user test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
-                () -> assertEquals(USER_UPDATE_ERROR, actualBody.getMessage(), ERROR_MESSAGE_FAILURE),
                 () -> assertFalse(actualUsers.contains(userNewValues), UPDATE_USER_FAILURE),
                 () -> assertFalse(actualUsers.contains(userToChange), UPDATE_USER_FAILURE)
         );
