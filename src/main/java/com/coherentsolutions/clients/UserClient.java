@@ -52,6 +52,11 @@ public class UserClient extends BaseClient {
         return proceedCUDRequest(httpClient, requestBody, code, new HttpPatch(getUri(PATH)), "PATCH a user");
     }
 
+    public Response deleteUser(CloseableHttpClient httpClient, UserDTO userToAdd, int code) {
+        String requestBody = convertObjectToJson(userToAdd);
+        return proceedCUDRequest(httpClient, requestBody, code, new HttpDelete(getUri(PATH)), "DELETE a user");
+    }
+
     private Response proceedGetRequest(CloseableHttpClient httpClient, int code, HttpGet httpGet) {
         String name = "Get all users";
         configureRequest(name, httpGet);
@@ -83,7 +88,7 @@ public class UserClient extends BaseClient {
         FailedResponseBody body = new FailedResponseBody();
 
         try {
-            if(!response.getBody().isEmpty()) {
+            if(response.getBody() != null && !response.getBody().isEmpty()) {
                 body = new ObjectMapper().readValue(response.getBody(), new TypeReference<>() {
                 });
             }

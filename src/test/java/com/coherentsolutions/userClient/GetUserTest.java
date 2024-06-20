@@ -25,11 +25,11 @@ import static com.coherentsolutions.data.ErrorMessages.UserClient.*;
 import static com.coherentsolutions.utils.GeneralUtil.getRandomAge;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Epic("REST API test.")
+@Epic("REST API test")
 @Feature("User Controller test")
 public class GetUserTest extends BaseTest {
 
-    @Story("Task 40 - Get users and filter them.")
+    @Story("Task 40 - Get users and filter them")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("smoke")
     @DisplayName("Get all users stored in the application test")
@@ -61,7 +61,7 @@ public class GetUserTest extends BaseTest {
         );
     }
 
-    @Story("Task 40 - Get users and filter them.")
+    @Story("Task 40 - Get users and filter them")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("Get all users older than value test")
@@ -96,7 +96,7 @@ public class GetUserTest extends BaseTest {
         );
     }
 
-    @Story("Task 40 - Get users and filter them.")
+    @Story("Task 40 - Get users and filter them")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("Get all users younger than value test")
@@ -131,7 +131,7 @@ public class GetUserTest extends BaseTest {
         );
     }
 
-    @Story("Task 40 - Get users and filter them.")
+    @Story("Task 40 - Get users and filter them")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("Get all users with specified gender test")
@@ -164,7 +164,7 @@ public class GetUserTest extends BaseTest {
         );
     }
 
-    @Story("Task 40 - Get users and filter them.")
+    @Story("Task 40 - Get users and filter them")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("Get all users with specified gender and younger than value test")
@@ -205,7 +205,7 @@ public class GetUserTest extends BaseTest {
         );
     }
 
-    @Story("Task 40 - Get users and filter them.")
+    @Story("Task 40 - Get users and filter them")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("Get all users with specified gender and older than value test")
@@ -246,11 +246,11 @@ public class GetUserTest extends BaseTest {
         );
     }
 
-    @Story("Task 40 - Get users and filter them.")
+    @Story("Task 40 - Get users and filter them")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("Get all users older and younger than value test")
-    @Description("Missed Scenario #3: The test verifies the impossibility of using parameters youngerThan and olderThan together.")
+    @Description("Missed Scenario #3: The test verifies impossibility of using parameters youngerThan and olderThan together.")
     @Test
     public void getUsersConflictParamsTest() {
         int targetAge = getRandomAge();

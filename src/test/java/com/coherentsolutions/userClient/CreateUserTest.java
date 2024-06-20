@@ -22,11 +22,11 @@ import static com.coherentsolutions.data.ErrorMessages.PredefinedErrorMessages.*
 import static com.coherentsolutions.data.ErrorMessages.UserClient.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Epic("REST API test.")
+@Epic("REST API test")
 @Feature("User Controller test")
 public class CreateUserTest extends BaseTest {
 
-    @Story("Task 30 - Create user.")
+    @Story("Task 30 - Create user")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("smoke")
     @DisplayName("Create user with all fields populated test")
@@ -61,7 +61,7 @@ public class CreateUserTest extends BaseTest {
         );
     }
 
-    @Story("Task 30 - Create user.")
+    @Story("Task 30 - Create user")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("smoke")
     @DisplayName("Create user with mandatory fields populated test")
@@ -88,7 +88,7 @@ public class CreateUserTest extends BaseTest {
         );
     }
 
-    @Story("Task 30 - Create user.")
+    @Story("Task 30 - Create user")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("Create user with unavailable zip code test")
@@ -115,7 +115,7 @@ public class CreateUserTest extends BaseTest {
             @Issue("Response error message is not correct."),
             @Issue("Existing user was added to the application.")
     })
-    @Story("Task 30 - Create user.")
+    @Story("Task 30 - Create user")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("Create duplicate of already existing user test")
@@ -137,11 +137,11 @@ public class CreateUserTest extends BaseTest {
         );
     }
 
-    @Story("Task 30 - Create user.")
+    @Story("Task 30 - Create user")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("Create user with missed required field(s) test")
-    @Description("Missed Scenario: The test verifies the impossibility to create user with missed required field(s).")
+    @Description("Missed Scenario: The test verifies impossibility to create user with missed required field(s).")
     @ParameterizedTest
     @MethodSource("missedRequiredFieldsUser")
     public void addUserWithoutRequiredFieldsTest(UserDTO userToAdd) {

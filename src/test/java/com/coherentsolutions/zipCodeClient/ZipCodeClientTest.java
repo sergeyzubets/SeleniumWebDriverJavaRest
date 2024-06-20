@@ -15,12 +15,12 @@ import java.util.List;
 import static com.coherentsolutions.data.ErrorMessages.Common.RESPONSE_CODE_FAILURE;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Epic("REST API test.")
+@Epic("REST API test")
 @Feature("Zip Code controller test")
 public class ZipCodeClientTest extends BaseTest {
 
     @Issue("Response code is not valid: 201 instead of 200.")
-    @Story("Task 20 - Get available zip codes and add more to the list.")
+    @Story("Task 20 - Get available zip codes and add more to the list")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("smoke")
     @DisplayName("Get all available zip codes test")
@@ -40,7 +40,7 @@ public class ZipCodeClientTest extends BaseTest {
         );
     }
 
-    @Story("Task 20 - Get available zip codes and add more to the list.")
+    @Story("Task 20 - Get available zip codes and add more to the list")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("smoke")
     @DisplayName("Expand zip codes test")
@@ -65,7 +65,7 @@ public class ZipCodeClientTest extends BaseTest {
     }
 
     @Issue("Duplicates for available zip codes can be added to the application.")
-    @Story("Task 20 - Get available zip codes and add more to the list.")
+    @Story("Task 20 - Get available zip codes and add more to the list")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("Add duplicates for available zip codes test")
@@ -92,7 +92,7 @@ public class ZipCodeClientTest extends BaseTest {
     }
 
     @Issue("Duplicates for used zip codes can be added to the application.")
-    @Story("Task 20 - Get available zip codes and add more to the list.")
+    @Story("Task 20 - Get available zip codes and add more to the list")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("Add duplicates for used zip codes test")

@@ -24,11 +24,11 @@ import static com.coherentsolutions.data.ErrorMessages.UserClient.*;
 import static com.coherentsolutions.utils.GeneralUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Epic("REST API test.")
+@Epic("REST API test")
 @Feature("User Controller test")
 public class UpdateUserTest extends BaseTest {
 
-    @Story("Task 50 - Update user.")
+    @Story("Task 50 - Update user")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("smoke")
     @DisplayName("PUT a user test")
@@ -64,7 +64,7 @@ public class UpdateUserTest extends BaseTest {
     }
 
     @Issue("The patched user has all fields overwritten.")
-    @Story("Task 50 - Update user.")
+    @Story("Task 50 - Update user")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("smoke")
     @DisplayName("PATCH a user test")
@@ -102,7 +102,7 @@ public class UpdateUserTest extends BaseTest {
 
 
     @Issue("The updated user was removed from the application.")
-    @Story("Task 50 - Update user.")
+    @Story("Task 50 - Update user")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("PUT a user with incorrect zip code test")
@@ -131,7 +131,7 @@ public class UpdateUserTest extends BaseTest {
     }
 
     @Issue("The patched user was removed from the application.")
-    @Story("Task 50 - Update user.")
+    @Story("Task 50 - Update user")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("PATCH a user with incorrect zip code test")
@@ -160,7 +160,7 @@ public class UpdateUserTest extends BaseTest {
     }
 
     @Issue("The updated user was removed from the application.")
-    @Story("Task 50 - Update user.")
+    @Story("Task 50 - Update user")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("PUT user with missed required field(s) test")
@@ -186,7 +186,7 @@ public class UpdateUserTest extends BaseTest {
     }
 
     @Issue("The patched user was removed from the application.")
-    @Story("Task 50 - Update user.")
+    @Story("Task 50 - Update user")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("PATCH user with missed required field(s) test")
@@ -211,11 +211,11 @@ public class UpdateUserTest extends BaseTest {
         );
     }
 
-    @Story("Task 50 - Update user.")
+    @Story("Task 50 - Update user")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("PUT non-existent user test")
-    @Description("Missed Scenario: The test verifies the impossibility to update non-existent user with PUT request.")
+    @Description("Missed Scenario: The test verifies impossibility to update non-existent user with PUT request.")
     @Test
     public void putNonExistentUserTest() {
         UserDTO userToChange = userClientBO.getUniqueUser(httpClient, HttpStatus.SC_OK);
@@ -229,16 +229,17 @@ public class UpdateUserTest extends BaseTest {
 
         assertAll("PUT non-existent user test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
+                () -> assertEquals(USER_UPDATE_ERROR, actualBody.getMessage(), ERROR_MESSAGE_FAILURE),
                 () -> assertFalse(actualUsers.contains(userNewValues), UPDATE_USER_FAILURE),
                 () -> assertFalse(actualUsers.contains(userToChange), UPDATE_USER_FAILURE)
         );
     }
 
-    @Story("Task 50 - Update user.")
+    @Story("Task 50 - Update user")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("PATCH non-existent user test")
-    @Description("Missed Scenario: The test verifies the impossibility to update non-existent user with PATCH request.")
+    @Description("Missed Scenario: The test verifies impossibility to update non-existent user with PATCH request.")
     @Test
     public void patchNonExistentUserTest() {
         UserDTO userToChange = userClientBO.getUniqueUser(httpClient, HttpStatus.SC_OK);
@@ -252,6 +253,7 @@ public class UpdateUserTest extends BaseTest {
 
         assertAll("PATCH non-existent user test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
+                () -> assertEquals(USER_UPDATE_ERROR, actualBody.getMessage(), ERROR_MESSAGE_FAILURE),
                 () -> assertFalse(actualUsers.contains(userNewValues), UPDATE_USER_FAILURE),
                 () -> assertFalse(actualUsers.contains(userToChange), UPDATE_USER_FAILURE)
         );

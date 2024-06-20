@@ -27,6 +27,8 @@ public final class ErrorMessages {
         public static final String PARAMETRIZED_LIST_EXTRA_USER_FAILURE = "Parametrized list of users contains extra user: ";
         public static final String UPDATE_USER_FAILURE = "User has been updated but should not.";
         public static final String USERS_LIST_FAILURE = "The list of all stored users does not contain the expected one.";
+        public static final String DELETE_USER_FAILURE = "User has not been deleted from the application.";
+        public static final String RETURN_ZIP_CODE_FAILURE = "Used Zip Code has not been returned to list of available codes.";
     }
 
     /**

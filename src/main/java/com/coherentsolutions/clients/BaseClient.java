@@ -93,7 +93,8 @@ public abstract class BaseClient {
 
                 HttpEntity entity = response.getEntity();
                 if (entity == null) {
-                    log.warn("Response contains no content.");
+                    log.info("Response does not have a content.");
+                    logResponse(statusCode, name, response, "");
                 } else {
                     body.set(EntityUtils.toString(entity, StandardCharsets.UTF_8));
                     logResponse(statusCode, name, response, body.get());
