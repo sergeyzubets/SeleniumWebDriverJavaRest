@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.coherentsolutions.utils.GeneralUtil.*;
 
@@ -52,5 +53,12 @@ public class UserClientBO extends BaseBO {
         return (List<UserDTO>) userClient.getUsers(httpClient, code).getParsedBody();
     }
 
-
+    @Step("Getting created by automation user(s).")
+    public List<UserDTO> getCreatedUsers(CloseableHttpClient httpClient, int code) {
+        List<UserDTO> allUsers = (List<UserDTO>) userClient.getUsers(httpClient, code).getParsedBody();
+        return allUsers
+                .stream()
+                .filter(user -> user.getName().startsWith(PREFIX))
+                .collect(Collectors.toList());
+    }
 }

@@ -10,15 +10,18 @@ import com.coherentsolutions.data.models.Parameter;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.core5.http.HttpStatus;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
 
 import java.util.List;
 
 import static com.coherentsolutions.utils.GeneralUtil.*;
 
 @Slf4j
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BaseTest {
     protected CloseableHttpClient httpClient;
     protected ZipCodeClient zipCodeClient;
@@ -40,14 +43,15 @@ public class BaseTest {
     }
 
     @AfterEach
-    @Step("Close Http Client instance.")
+    @Step("Close Http Client instance and test data clean up.")
     protected void closeClientInstance() {
+        usersCleanUp(httpClient);
         HttpClient.closeHttpClient();
     }
 
     @AfterAll
-    public static void tearDown() {
-        //TODO add user clean up method as part of tear down
+    public void tearDown() {
+        log.info("Write allure environment data");
         writeAllureEnvironmentFile(
                 List.of(
                         new Parameter("Docker image scheme", System.getProperty("scheme")),
@@ -65,4 +69,10 @@ public class BaseTest {
         );
     }
 
+    @Step("Removing added user(s).")
+    private void usersCleanUp(CloseableHttpClient client) {
+        log.info("Removing all added user(s).");
+        userClientBO.getCreatedUsers(client, HttpStatus.SC_OK)
+                .forEach(user -> userClient.deleteUser(client, user, HttpStatus.SC_NO_CONTENT));
+    }
 }

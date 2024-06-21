@@ -70,7 +70,8 @@ public class HttpClient extends BaseClient {
 
     @Step("Getting read&write access tokens for httpClient instance.")
     public static void getTokens(CloseableHttpClient httpClient) {
-        readToken = new AuthorizationClient().getToken(httpClient, Scope.READ);
-        writeToken = new AuthorizationClient().getToken(httpClient, Scope.WRITE);
+        AuthorizationClient authorizationClient = new AuthorizationClient();
+        readToken = authorizationClient.getToken(httpClient, Scope.READ);
+        writeToken = authorizationClient.getToken(httpClient, Scope.WRITE);
     }
 }
