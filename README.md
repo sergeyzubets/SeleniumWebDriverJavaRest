@@ -53,4 +53,4 @@ mvn clean test -DsuiteFile="SmokeTest"
 allure serve target/allure-results   
 ```
 ## Status
-In progress.
+Done.
