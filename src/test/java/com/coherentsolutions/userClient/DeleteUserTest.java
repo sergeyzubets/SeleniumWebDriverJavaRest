@@ -112,7 +112,6 @@ public class DeleteUserTest extends BaseTest {
     @Story("Task 60 - Delete user")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
-    @Tag("new")
     @DisplayName("Delete non-existent user test")
     @Description("Missed Scenario: The test verifies the impossibility to delete non-existent user.")
     @Test
