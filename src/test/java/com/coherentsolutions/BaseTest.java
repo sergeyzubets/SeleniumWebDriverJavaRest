@@ -43,15 +43,14 @@ public class BaseTest {
     }
 
     @AfterEach
-    @Step("Close Http Client instance and test data clean up.")
+    @Step("Close Http Client instance.")
     protected void closeClientInstance() {
-        usersCleanUp(httpClient);
         HttpClient.closeHttpClient();
     }
 
     @AfterAll
     public void tearDown() {
-        log.info("Write allure environment data");
+        usersCleanUp();
         writeAllureEnvironmentFile(
                 List.of(
                         new Parameter("Docker image scheme", System.getProperty("scheme")),
@@ -69,9 +68,9 @@ public class BaseTest {
         );
     }
 
-    @Step("Removing added user(s).")
-    private void usersCleanUp(CloseableHttpClient client) {
-        log.info("Removing all added user(s).");
+    private void usersCleanUp() {
+        log.info("Removing all added users.");
+        CloseableHttpClient client = HttpClient.getHttpClientInstance();
         userClientBO.getCreatedUsers(client, HttpStatus.SC_OK)
                 .forEach(user -> userClient.deleteUser(client, user, HttpStatus.SC_NO_CONTENT));
     }
