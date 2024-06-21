@@ -35,7 +35,7 @@ public class ZipCodeClient extends BaseClient {
 
         try {
             List<ZipCodeDTO> zipCodes = new ObjectMapper().readValue(response.getBody(), new TypeReference<>() {
-                        });
+            });
             return new Response(response.getCode(), zipCodes);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
@@ -62,7 +62,7 @@ public class ZipCodeClient extends BaseClient {
 
         try {
             List<ZipCodeDTO> zipCodes = new ObjectMapper().readValue(response.getBody(), new TypeReference<>() {
-                        });
+            });
             return new Response(response.getCode(), zipCodes);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());

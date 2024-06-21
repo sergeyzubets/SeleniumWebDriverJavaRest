@@ -13,13 +13,14 @@ import org.apache.hc.client5.http.classic.methods.*;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpStatus;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import static com.coherentsolutions.utils.GeneralUtil.convertObjectToJson;
-import static com.coherentsolutions.utils.GeneralUtil.logRequest;
+import static com.coherentsolutions.utils.GeneralUtil.*;
 
 @Slf4j
 public class UserClient extends BaseClient {
@@ -57,6 +58,11 @@ public class UserClient extends BaseClient {
         return proceedCUDRequest(httpClient, requestBody, code, new HttpDelete(getUri(PATH)), "DELETE a user");
     }
 
+    public Response uploadUser(CloseableHttpClient httpClient, File file, int code) {
+        String path = "/users/upload";
+        return proceedUploadRequest(httpClient, file, code, new HttpPost(getUri(path)));
+    }
+
     private Response proceedGetRequest(CloseableHttpClient httpClient, int code, HttpGet httpGet) {
         String name = "Get all users";
         configureRequest(name, httpGet);
@@ -67,7 +73,7 @@ public class UserClient extends BaseClient {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(response.getBody());
 
-            if(root.isArray()) {
+            if (root.isArray()) {
                 List<UserDTO> users = new ObjectMapper().readValue(response.getBody(), new TypeReference<>() {
                 });
                 return new Response(response.getCode(), users);
@@ -88,7 +94,27 @@ public class UserClient extends BaseClient {
         FailedResponseBody body = new FailedResponseBody();
 
         try {
-            if(response.getBody() != null && !response.getBody().isEmpty()) {
+            if (response.getBody() != null && !response.getBody().isEmpty()) {
+                body = new ObjectMapper().readValue(response.getBody(), new TypeReference<>() {
+                });
+            }
+            return new Response(response.getCode(), body);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Response proceedUploadRequest(CloseableHttpClient httpClient, File file, int code, HttpPost httpPost) {
+        String name = "Upload a user";
+        configureRequest(name, httpPost, file);
+        Response response = sendRequest(httpClient, httpPost, name, code);
+        FailedResponseBody body;
+
+        try {
+            if (response.getCode() == HttpStatus.SC_CREATED) {
+                return new Response(response.getCode(), response.getBody());
+            } else {
                 body = new ObjectMapper().readValue(response.getBody(), new TypeReference<>() {
                 });
             }
@@ -112,5 +138,15 @@ public class UserClient extends BaseClient {
         request.addHeader("Content-Type", "application/json");
         request.setEntity(stringEntity);
         logRequest(name, request, requestBody);
+    }
+
+    private void configureRequest(String name, HttpPost httpPost, File file) {
+        httpPost.addHeader("Authorization", HttpClient.getWriteToken());
+        httpPost.addHeader("accept", "*/*");
+        HttpEntity entity = convertFileToEntity(file);
+        httpPost.setEntity(entity);
+        String requestBody = convertEntityToString(entity);
+        HttpEntity stringEntity = new StringEntity(requestBody, ContentType.APPLICATION_JSON);
+        logRequest(name, httpPost, stringEntity, requestBody);
     }
 }

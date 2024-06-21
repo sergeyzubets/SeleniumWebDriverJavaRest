@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static com.coherentsolutions.data.ErrorMessages.Common.RESPONSE_CODE_FAILURE;
+import static com.coherentsolutions.data.ErrorMessages.ZipCodeClient.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Epic("REST API test")
@@ -36,7 +37,7 @@ public class ZipCodeClientTest extends BaseTest {
 
         assertAll("GET all available zip codes test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
-                () -> assertTrue(actualZipCodes.contains(newZipCode), "List of available zip codes does not contain added one.")
+                () -> assertTrue(actualZipCodes.contains(newZipCode), ZIP_CODE_LIST_FAILURE)
         );
     }
 
@@ -57,10 +58,8 @@ public class ZipCodeClientTest extends BaseTest {
 
         assertAll("Expand zip codes test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
-                () -> assertTrue(actualZipCodes.contains(zipCodeToAdd1),
-                        "Zip code " + zipCodeToAdd1 + " has not been added."),
-                () -> assertTrue(actualZipCodes.contains(zipCodeToAdd2),
-                        String.format("Zip code %s has not been added.", zipCodeToAdd2))
+                () -> assertTrue(actualZipCodes.contains(zipCodeToAdd1), String.format(ADD_ZIP_CODE_FAILURE, zipCodeToAdd1)),
+                () -> assertTrue(actualZipCodes.contains(zipCodeToAdd2), String.format(ADD_ZIP_CODE_FAILURE, zipCodeToAdd2))
         );
     }
 
@@ -83,11 +82,9 @@ public class ZipCodeClientTest extends BaseTest {
 
         assertAll("Add duplicates for available zip codes test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
-                () -> assertTrue(actualZipCodes.contains(uniqueZipCode), "List of available zip codes does not contain added one."),
-                () -> assertFalse(actualZipCodes.contains(duplicate1),
-                        String.format("Duplicate for existing code %s was added to the application.", duplicate1)),
-                () -> assertFalse(actualZipCodes.contains(duplicate2),
-                        String.format("Duplicate for existing code %s was added to the application.", duplicate2))
+                () -> assertTrue(actualZipCodes.contains(uniqueZipCode), ZIP_CODE_LIST_FAILURE),
+                () -> assertFalse(actualZipCodes.contains(duplicate1), String.format(ADD_DUPLICATE_FAILURE, duplicate1)),
+                () -> assertFalse(actualZipCodes.contains(duplicate2), String.format(ADD_DUPLICATE_FAILURE, duplicate2))
         );
     }
 
@@ -113,9 +110,8 @@ public class ZipCodeClientTest extends BaseTest {
 
         assertAll("Add duplicates for used zip codes test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
-                () -> assertTrue(actualZipCodes.contains(uniqueZipCode), "List of available zip codes does not contain added one."),
-                () -> assertFalse(actualZipCodes.contains(usedZipCode),
-                        String.format("Duplicate for used code %s was added to the application.", usedZipCode))
+                () -> assertTrue(actualZipCodes.contains(uniqueZipCode), ZIP_CODE_LIST_FAILURE),
+                () -> assertFalse(actualZipCodes.contains(usedZipCode), String.format(ADD_DUPLICATE_FAILURE, usedZipCode))
         );
     }
 }

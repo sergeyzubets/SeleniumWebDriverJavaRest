@@ -22,6 +22,11 @@ public class Response {
     private FailedResponseBody failedBody;
     private List<?> parsedBody;
 
+    public Response(int code, String body) {
+        this.code = code;
+        this.body = body;
+    }
+
     public Response(int code, FailedResponseBody failedBody) {
         this.code = code;
         this.failedBody = failedBody;

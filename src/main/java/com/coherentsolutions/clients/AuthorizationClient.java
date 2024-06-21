@@ -34,7 +34,7 @@ public class AuthorizationClient extends BaseClient {
         URI uri = getUri(path, paramMap);
 
         HttpPost httpPost = new HttpPost(uri);
-        String requestName = "Get " + scope.getValue() + " token";
+        String requestName = String.format("Get %s token", scope.getValue());
         logRequest(requestName, httpPost);
         Response response = sendRequest(httpClient, httpPost, requestName, HttpStatus.SC_OK);
 

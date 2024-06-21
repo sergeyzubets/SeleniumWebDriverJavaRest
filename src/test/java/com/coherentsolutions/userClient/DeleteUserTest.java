@@ -19,6 +19,7 @@ import java.util.List;
 import static com.coherentsolutions.data.ErrorMessages.Common.ERROR_MESSAGE_FAILURE;
 import static com.coherentsolutions.data.ErrorMessages.Common.RESPONSE_CODE_FAILURE;
 import static com.coherentsolutions.data.ErrorMessages.PredefinedErrorMessages.REQUIRED_FIELDS_VALIDATION;
+import static com.coherentsolutions.data.ErrorMessages.PredefinedErrorMessages.USED_NOT_FOUND;
 import static com.coherentsolutions.data.ErrorMessages.UserClient.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -101,6 +102,34 @@ public class DeleteUserTest extends BaseTest {
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
                 () -> assertEquals(REQUIRED_FIELDS_VALIDATION, actualBody.getMessage(), ERROR_MESSAGE_FAILURE),
                 () -> assertTrue(actualUsers.contains(newUser), USERS_LIST_FAILURE)
+        );
+    }
+
+    @Issues({
+            @Issue("Response code is not valid: 204 instead of 404."),
+            @Issue("Response error message is not correct."),
+    })
+    @Story("Task 60 - Delete user")
+    @Severity(SeverityLevel.NORMAL)
+    @Tag("regression")
+    @Tag("new")
+    @DisplayName("Delete non-existent user test")
+    @Description("Missed Scenario: The test verifies the impossibility to delete non-existent user.")
+    @Test
+    public void deleteNonExistentUserTest() {
+        UserDTO newUser = userClientBO.getUniqueUser(httpClient, HttpStatus.SC_OK);
+        userClient.createUser(httpClient, newUser, HttpStatus.SC_CREATED);
+        UserDTO nonExistentUser = userClientBO.getUniqueUser(httpClient, HttpStatus.SC_OK);
+
+        int expectedResponseCode = HttpStatus.SC_NOT_FOUND;
+        Response response = userClient.deleteUser(httpClient, nonExistentUser, expectedResponseCode);
+        FailedResponseBody actualBody = response.getFailedBody();
+        List<UserDTO> actualUsers = userClientBO.getAvailableUsers(httpClient, HttpStatus.SC_OK);
+
+        assertAll("Delete non-existent user test failed.",
+                () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
+                () -> assertEquals(USED_NOT_FOUND, actualBody.getMessage(), ERROR_MESSAGE_FAILURE),
+                () -> assertFalse(actualUsers.contains(nonExistentUser), USERS_LIST_FAILURE)
         );
     }
 }
