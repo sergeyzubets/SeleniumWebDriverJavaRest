@@ -31,6 +31,7 @@ import java.util.Random;
 @Slf4j
 public class GeneralUtil {
     private static final Faker FAKER = new Faker();
+    public static final String PREFIX = "AUTO_";
     private static final long WHILE_LIFETIME_SEC = 20;
     private static final int MAX_USER_AGE = 120;
     private static final Path USER_CREDENTIALS_FILE = Paths.get(System.getProperty("allure.results.directory"), "environment.xml");
@@ -73,7 +74,7 @@ public class GeneralUtil {
     }
 
     public static String getRandomUserName() {
-        return FAKER.name().fullName();
+        return PREFIX + FAKER.name().fullName();
     }
 
     public static Gender getRandomGender() {
