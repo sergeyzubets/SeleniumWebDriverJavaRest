@@ -9,6 +9,11 @@ public class FailedResponseBody {
     private String ts;
     private String message;
 
+    private String timestamp;
+    private int status;
+    private String error;
+    private String path;
+
     @Override
     public String toString() {
         return "Failed Response Body message: " + message;

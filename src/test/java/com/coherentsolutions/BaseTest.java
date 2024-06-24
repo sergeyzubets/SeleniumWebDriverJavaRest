@@ -36,6 +36,14 @@ public class BaseTest {
         userClientBO = new UserClientBO();
     }
 
+    protected static List<UserDTO> missedRequiredFieldsUser() {
+        return List.of(
+                new UserDTO(getRandomUserName(), null),
+                new UserDTO(null, getRandomGender()),
+                new UserDTO(null, null)
+        );
+    }
+
     @BeforeEach
     @Step("Get http client instance and access tokens.")
     protected void environmentSetup() {
@@ -57,14 +65,6 @@ public class BaseTest {
                         new Parameter("Docker image host", System.getProperty("host")),
                         new Parameter("Docker image port", System.getProperty("port"))
                 )
-        );
-    }
-
-    protected static List<UserDTO> missedRequiredFieldsUser() {
-        return List.of(
-                new UserDTO(getRandomUserName(), null),
-                new UserDTO(null, getRandomGender()),
-                new UserDTO(null, null)
         );
     }
 

@@ -55,8 +55,7 @@ public class CreateUserTest extends BaseTest {
                 () -> assertEquals(newUser.getGender(), actualUser.getGender(), GENDER_FAILURE),
                 () -> assertEquals(newUser.getAge(), actualUser.getAge(), AGE_FAILURE),
                 () -> assertEquals(newUser.getZipCode(), actualUser.getZipCode(), ZIP_CODE_FAILURE),
-                () -> assertFalse(actualZipCodes.contains(usedZipCode),
-                        "Used Zip Code has not been removed from available zip codes of application."),
+                () -> assertFalse(actualZipCodes.contains(usedZipCode), USED_ZIP_CODE_FAILURE),
                 () -> assertNull(response.getBody(), BODY_FAILURE)
         );
     }
@@ -92,7 +91,7 @@ public class CreateUserTest extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("Create user with unavailable zip code test")
-    @Description("Scenario #3: The test verifies ability to add user to the application with all fields populated and incorrect (unavailable) zip code.")
+    @Description("Scenario #3: The test verifies impossibility to add user to the application with all fields populated and incorrect (unavailable) zip code.")
     @Test
     public void addUserWithIncorrectZipCodeTest() {
         ZipCodeDTO usedZipCode = zipCodeClientBO.getNonexistentZipCode(httpClient, HttpStatus.SC_OK);
@@ -106,7 +105,7 @@ public class CreateUserTest extends BaseTest {
         assertAll("Create user with unavailable zip code test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
                 () -> assertEquals(USER_WITH_UNAVAILABLE_ZIP_CODE, actualBody.getMessage(), ERROR_MESSAGE_FAILURE),
-                () -> assertFalse(actualUsers.contains(newUser), "User has been added to the application but should not.")
+                () -> assertFalse(actualUsers.contains(newUser), ADD_USER_FAILURE)
         );
     }
 
@@ -119,7 +118,7 @@ public class CreateUserTest extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
     @DisplayName("Create duplicate of already existing user test")
-    @Description("Scenario #4: The test verifies ability to add already existing user to the application.")
+    @Description("Scenario #4: The test verifies impossibility to add already existing user to the application.")
     @Test
     public void addAlreadyExistingUserTest() {
         UserDTO newUser = userClientBO.getUniqueUser(httpClient, HttpStatus.SC_OK);
@@ -133,7 +132,7 @@ public class CreateUserTest extends BaseTest {
         assertAll("Create duplicate of already existing user test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
                 () -> assertEquals(USER_UNIQUENESS, actualBody.getMessage(), ERROR_MESSAGE_FAILURE),
-                () -> assertFalse(actualUsers.contains(newUser), "User has been added to the application but should not.")
+                () -> assertFalse(actualUsers.contains(newUser), ADD_USER_FAILURE)
         );
     }
 
@@ -153,7 +152,7 @@ public class CreateUserTest extends BaseTest {
         assertAll("Create user with missed required field(s) test failed.",
                 () -> assertEquals(expectedResponseCode, response.getCode(), RESPONSE_CODE_FAILURE),
                 () -> assertEquals(REQUIRED_FIELDS_VALIDATION, actualBody.getMessage(), ERROR_MESSAGE_FAILURE),
-                () -> assertFalse(actualUsers.contains(userToAdd), "User has been added to the application but should not.")
+                () -> assertFalse(actualUsers.contains(userToAdd), ADD_USER_FAILURE)
         );
     }
 }

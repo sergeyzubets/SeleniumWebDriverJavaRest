@@ -3,6 +3,7 @@ package com.coherentsolutions.utils;
 import com.coherentsolutions.data.Gender;
 import com.coherentsolutions.data.dto.AccessTokenDTO;
 import com.coherentsolutions.data.dto.UpdateUserDTO;
+import com.coherentsolutions.data.dto.UserDTO;
 import com.coherentsolutions.data.models.Environment;
 import com.coherentsolutions.data.models.Parameter;
 import com.coherentsolutions.data.models.Request;
@@ -10,12 +11,16 @@ import com.coherentsolutions.data.models.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.entity.mime.HttpMultipartMode;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
@@ -30,14 +35,15 @@ import java.util.Random;
 
 @Slf4j
 public class GeneralUtil {
-    private static final Faker FAKER = new Faker();
     public static final String PREFIX = "AUTO_";
+    private static final Faker FAKER = new Faker();
     private static final long WHILE_LIFETIME_SEC = 20;
     private static final int MAX_USER_AGE = 120;
     private static final Path USER_CREDENTIALS_FILE = Paths.get(System.getProperty("allure.results.directory"), "environment.xml");
+    private static final String UPLOAD_RESPONSE_PATTERN = "Number of users = ";
 
     public static void logTokenDetails(AccessTokenDTO token, String scope) {
-        log.warn("{} access token expires in {} hours.", scope.toUpperCase(), String.format("%.3f", (double) token.getExpiresIn() / 3600));
+        log.info("{} access token expires in {} hours.", scope.toUpperCase(), String.format("%.3f", (double) token.getExpiresIn() / 3600));
     }
 
     @Step("Sending request.")
@@ -50,6 +56,12 @@ public class GeneralUtil {
     public static void logRequest(String name, HttpUriRequestBase request, String requestBody) {
         String requestName = String.format("'%s' request", name);
         log.info(new Request(requestName, new RequestLine(request), request.getHeaders(), request.getEntity(), requestBody).toString());
+    }
+
+    @Step("Sending request.")
+    public static void logRequest(String name, HttpUriRequestBase request, HttpEntity stringEntity, String requestBody) {
+        String requestName = String.format("'%s' request", name);
+        log.info(new Request(requestName, new RequestLine(request), request.getHeaders(), stringEntity, requestBody).toString());
     }
 
     @Step("Getting response.")
@@ -98,6 +110,22 @@ public class GeneralUtil {
         return requestBody;
     }
 
+    public static HttpEntity convertFileToEntity(File file) {
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.STRICT);
+        builder.addBinaryBody("file", file, ContentType.DEFAULT_BINARY, file.getName());
+        return builder.build();
+    }
+
+    public static String convertEntityToString(HttpEntity entity) {
+        try {
+            return EntityUtils.toString(entity);
+        } catch (IOException | ParseException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
     public static boolean keepWhile(long whileStartTime) {
         boolean result = true;
         if (System.currentTimeMillis() >= whileStartTime + WHILE_LIFETIME_SEC * 1000) {
@@ -119,5 +147,19 @@ public class GeneralUtil {
 
     public static String removeLineFromBody(UpdateUserDTO updateUser) {
         return convertObjectToJson(updateUser).replace(" \"zipCode\" : null,", "");
+    }
+
+    public static void writeUsersToJsonFile(List<UserDTO> listOfUsers, File file) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        try {
+            objectMapper.writeValue(file, listOfUsers);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    public static int getUploadedUsersAmount(String body) {
+        return Integer.parseInt(body.replace(UPLOAD_RESPONSE_PATTERN, ""));
     }
 }

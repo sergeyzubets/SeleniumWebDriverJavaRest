@@ -145,7 +145,7 @@ public class GetUserTest extends BaseTest {
         userClient.createUser(httpClient, user2, HttpStatus.SC_CREATED);
         Gender targetGender = user2.getGender();
 
-                List<UserDTO> usersList = (List<UserDTO>) userClient.getUsers(httpClient, HttpStatus.SC_OK).getParsedBody();
+        List<UserDTO> usersList = (List<UserDTO>) userClient.getUsers(httpClient, HttpStatus.SC_OK).getParsedBody();
         List<UserDTO> expectedUsers = usersList
                 .stream()
                 .filter(user -> user.getGender() != null && user.getGender().equals(targetGender))
